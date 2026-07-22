@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO & META TAGS PRIMÁRIAS -->
+    <title>Festa no Condomínio | Aniversários & Eventos Privativos</title>
+    <meta name="description" content="Som de alta fidelidade, DJ profissional e iluminação cênica sob medida para aniversários e celebrações em condomínios e casas de alto padrão em Bragança, Atibaia e região.">
+    <meta name="keywords" content="DJ para aniversário Atibaia, som para festa em condomínio Bragança Paulista, iluminação cênica Extrema, DJ festa de aniversário 40 anos, estrutura de som para casa em condomínio">
+    <meta name="robots" content="index, follow">
+
+    <!-- OPEN GRAPH / WHATSAPP PREVIEW -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://festanocondominio.com.br/">
+    <meta property="og:title" content="Festa no Condomínio | Som & DJ para Aniversários e Celebrações">
+    <meta property="og:description" content="O aniversário dos seus sonhos no espaço do seu condomínio ou residência. Sem fiação exposta, sem multas e com acústica perfeita.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1200&q=80">
+
+    <!-- DADOS ESTRUTURADOS JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EntertainmentBusiness",
+      "name": "Festa no Condomínio — Produção & Entretenimento",
+      "description": "DJ profissional, sonorização aveludada e iluminação cênica para aniversários, festas residenciais e salões de festa em condomínios de alto padrão.",
+      "url": "https://festanocondominio.com.br",
+      "telephone": "+5511948564577",
+      "priceRange": "$$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bragança Paulista",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bragança Paulista" },
+        { "@type": "City", "name": "Atibaia" },
+        { "@type": "City", "name": "Extrema" },
+        { "@type": "City", "name": "Itatiba" }
+      ],
+      "knowsAbout": [
+        "DJ Profissional para Aniversários",
+        "Sonorização para Salão de Festas",
+        "Acústica Controlada para Condomínios",
+        "Iluminação Cênica para Eventos Residenciais"
+      ]
+    }
+    </script>
+
+    <!-- Tailwind CSS & Fonts Otimizados -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        champagne: '#D4B068',
+                        champagneHover: '#C29D55',
+                        offwhite: '#FAF9F6',
+                        darkEspresso: '#1C1814',
+                        bodyText: '#3F3F46',
+                        mutedText: '#71717A',
+                        cardBg: '#FFFFFF',
+                        darkCardBg: '#1A1511',
+                        subtleBorder: '#E4E4E7',
+                        darkSubtleBorder: '#382D24'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #FAF9F6;
+            color: #1C1814;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        html.dark body {
+            background-color: #0F0D0B;
+            color: #FAF9F6;
+        }
+
+        @keyframes tideBreathing {
+            0%, 100% {
+                transform: translateY(0px);
+                border-color: rgba(212, 176, 104, 0.40);
+                box-shadow: 0 20px 45px rgba(28, 24, 20, 0.12), inset 0 0 12px rgba(212, 176, 104, 0.10);
+            }
+            50% {
+                transform: translateY(-2.5px);
+                border-color: rgba(212, 176, 104, 0.65);
+                box-shadow: 0 25px 55px rgba(212, 176, 104, 0.18), inset 0 0 20px rgba(212, 176, 104, 0.20);
+            }
+        }
+
+        @keyframes cardTide {
+            0%, 100% {
+                transform: translateY(0px);
+                border-color: rgba(228, 228, 231, 0.9);
+            }
+            50% {
+                transform: translateY(-2px);
+                border-color: rgba(212, 176, 104, 0.45);
+                box-shadow: 0 10px 25px rgba(212, 176, 104, 0.10);
+            }
+        }
+
+        @keyframes ctaChestGlow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 6px 18px rgba(212, 176, 104, 0.30);
+            }
+            50% {
+                transform: scale(1.015);
+                box-shadow: 0 10px 25px rgba(212, 176, 104, 0.55), 0 0 15px rgba(212, 176, 104, 0.35);
+            }
+        }
+
+        .hero-amber-overlay {
+            background: linear-gradient(135deg, rgba(250, 243, 230, 0.88) 0%, rgba(243, 232, 211, 0.82) 100%);
+            backdrop-filter: blur(16px) brightness(1.05);
+            -webkit-backdrop-filter: blur(16px) brightness(1.05);
+            animation: tideBreathing 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            border: 1px solid rgba(212, 176, 104, 0.4);
+        }
+
+        html.dark .hero-amber-overlay {
+            background: linear-gradient(135deg, rgba(28, 24, 20, 0.45) 0%, rgba(212, 176, 104, 0.20) 100%);
+            border: none;
+        }
+
+        .card-tide-1 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .card-tide-2 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.8s; }
+        .card-tide-3 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 3.6s; }
+
+        .cta-breathing {
+            animation: ctaChestGlow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .penthouse-highlight {
+            border: 2px solid #D4B068;
+            box-shadow: 0 10px 30px rgba(212, 176, 104, 0.25);
+        }
+
+        .logo-ape-suave {
+            color: #D4B068;
+            text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.90);
+        }
+
+        html.dark .logo-ape-suave {
+            color: #D4B068;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.90);
+        }
+
+        .nav-link-sheen {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .nav-link-sheen::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent 20%, rgba(212, 176, 104, 0.8) 50%, transparent 80%);
+            transform: rotate(25deg);
+        }
+
+        .nav-link-sheen:hover::after {
+            left: 150%;
+            transition: left 0.4s ease-in-out;
+        }
+
+        .hero-title-dark {
+            color: #1C1814;
+            text-shadow: 0px 1px 1.5px rgba(255, 255, 255, 0.70);
+        }
+
+        html.dark .hero-title-dark {
+            color: #F3E8D3;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.95);
+        }
+
+        .hero-support-text {
+            color: #2D2822;
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.85);
+            font-weight: 700;
+        }
+
+        html.dark .hero-support-text {
+            color: #E2D9CC;
+            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.90);
+            font-weight: 600;
+        }
+
+        .text-offwhite-to-champagne {
+            background: linear-gradient(135deg, #1C1814 0%, #4A3B24 40%, #D4B068 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+        }
+
+        html.dark .text-offwhite-to-champagne {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F5EBE0 30%, #D4B068 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 2px rgba(28, 24, 20, 0.4));
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+            opacity: 0;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 0.875rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: #D4B068;
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-champagne selection:text-white overflow-x-hidden">
+
+    <!-- NAVBAR FIXA -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#FAF9F6]/60 dark:bg-[#0F0D0B]/60 backdrop-blur-xl border-b border-subtleBorder/80 dark:border-darkSubtleBorder/80">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between" style="height: 69px;">
+            <a href="#" class="text-xl font-extrabold tracking-tight text-darkEspresso dark:text-offwhite uppercase">
+                Festa no <span class="logo-ape-suave font-bold text-2xl tracking-wide ml-0.5">Condomínio</span>
+            </a>
+
+            <!-- NAV DESKTOP -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-bold tracking-widest text-darkEspresso dark:text-offwhite uppercase">
+                <a href="#experiencia" class="nav-link-sheen hover:text-champagne transition-colors py-1">Diferenciais</a>
+                <a href="#ofertas" class="nav-link-sheen hover:text-champagne transition-colors py-1">Formatos</a>
+                <a href="#faq" class="nav-link-sheen hover:text-champagne transition-colors py-1">Dúvidas</a>
+            </nav>
+
+            <!-- AÇÕES DESKTOP -->
+            <div class="hidden md:flex items-center gap-4">
+                <button id="theme-toggle" aria-label="Alternar Tema" class="p-2.5 rounded-xl border border-subtleBorder dark:border-darkSubtleBorder text-darkEspresso dark:text-offwhite hover:border-champagne/60 transition-all duration-200">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block text-champagne"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden text-amber-900"></i>
+                </button>
+
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20simular%20um%20or%C3%A7amento%20para%20anivers%C3%A1rio/evento%20em%20condom%C3%ADnio." 
+                   target="_blank" 
+                   class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-6 py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing block">
+                    Simular Orçamento
+                </a>
+            </div>
+
+            <!-- AÇÕES MOBILE -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" aria-label="Alternar Tema Mobile" class="p-2 rounded-xl border border-subtleBorder dark:border-darkSubtleBorder text-darkEspresso dark:text-offwhite">
+                    <i data-lucide="sun" class="w-4.5 h-4.5 hidden dark:block text-champagne"></i>
+                    <i data-lucide="moon" class="w-4.5 h-4.5 block dark:hidden text-amber-900"></i>
+                </button>
+
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20simular%20um%20or%C3%A7amento%20para%20anivers%C3%A1rio/evento%20em%20condom%C3%ADnio." 
+                   target="_blank" 
+                   class="bg-champagne hover:bg-champagneHover text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-sm flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>Consultar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION -->
+    <section class="relative w-full min-h-[85vh] flex items-center justify-center pt-28 pb-16 overflow-hidden border-b border-subtleBorder dark:border-darkSubtleBorder bg-darkEspresso">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80" 
+                 alt="Aniversário e Celebração em Condomínio" 
+                 class="w-full h-full object-cover object-center brightness-100 contrast-95">
+            <div class="absolute inset-0 bg-gradient-to-b from-darkEspresso/30 via-amber-950/20 to-darkEspresso/40"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center my-auto">
+            <div class="hero-amber-overlay p-8 sm:p-12 rounded-3xl shadow-xl">
+                <span class="inline-block text-[11px] font-extrabold tracking-[0.22em] text-amber-900 dark:text-champagne uppercase mb-4 px-4 py-1.5 rounded-full bg-champagne/30 border border-champagne/50">
+                    Atibaia • Bragança Paulista • Extrema & Região
+                </span>
+
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.18] mb-6">
+                    <span class="hero-title-dark">Seu aniversário com padrão de clube privativo.</span> <br>
+                    <span class="text-offwhite-to-champagne font-extrabold inline-block mt-1">
+                        No espaço do seu condomínio ou residência.
+                    </span>
+                </h1>
+
+                <p class="hero-support-text text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-2 text-center">
+                    Som cristalino de alta fidelidade, DJ com curadoria musical sob medida e iluminação elegante. Sem fiação exposta, sem estresse com síndicos e com total respeito às regras do seu espaço.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-5xl mx-auto px-6 py-16 space-y-20">
+
+        <!-- 2. A EXPERIÊNCIA SENSORIAL -->
+        <section id="experiencia">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Engenharia Sonora & Cênica
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Feito sob medida para condomínios fechados</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-1 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="volume-2" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Acústica Calibrada</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Pista animada com graves envolventes e som preenchido sem gerar reclamações ou multas no condomínio.
+                    </p>
+                </div>
+
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-2 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Iluminação Arquitetural</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Cenografia de luz inteligente que valoriza a arquitetura da sua área gourmet, salão de festas ou jardim.
+                    </p>
+                </div>
+
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-3 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="eye-off" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Montagem Discreta & Limpa</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Equipamentos compactos de altíssima fidelidade, sem fiação aparente e sem poluidores visuais.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. OFERTAS & ANCORAGEM -->
+        <section id="ofertas">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Pacotes Otimizados
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Formatos perfeitos para o seu espaço</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                <!-- CARD 1 (POCKET) -->
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-3xl p-7 flex flex-col justify-between shadow-sm card-tide-1">
+                    <div>
+                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Pocket Session" 
+                                 class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite">Pocket Session</h3>
+                            <span class="text-[10px] font-extrabold text-amber-800 dark:text-champagne bg-champagne/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Espaços Gourmet & Varandas
+                            </span>
+                        </div>
+
+                        <p class="text-xs font-bold text-champagne uppercase tracking-widest mb-3">A Arte de Receber Bem</p>
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold mb-6 leading-relaxed text-left">
+                            Ideal para recepções de aniversário, jantares e encontros privativos de até 40 pessoas.
+                        </p>
+
+                        <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
+                            <span class="text-[11px] font-extrabold text-mutedText dark:text-champagne/80 uppercase tracking-wider block mb-3">O que está incluído:</span>
+                            <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold text-left">
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Atração:</strong> DJ Profissional com Repertório Personalizado <strong class="font-bold">OU</strong> Cantor Solo Ao Vivo.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Sonorização:</strong> Sistema compacto Electro-Voice HD com cabeamento 100% oculto.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Luz de Destaque:</strong> 2 Pontos de Iluminação Cênica direcionada.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Duração:</strong> Até 3h de DJ Set Profissional <strong class="font-bold">OU</strong> Até 2h de Show Ao Vivo.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-5 border-t border-subtleBorder dark:border-darkSubtleBorder">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
+                            <span class="text-xs text-bodyText dark:text-[#D1C7BD] font-semibold">A partir de <strong class="text-lg font-extrabold text-darkEspresso dark:text-champagne ml-1">R$ 890,00</strong></span>
+                        </div>
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20reservar%20a%20Pocket%20Session%20para%20meu%20evento." 
+                           target="_blank" 
+                           class="w-full block text-center bg-zinc-100 dark:bg-[#2A221B] hover:bg-zinc-200 dark:hover:bg-[#382E25] text-darkEspresso dark:text-offwhite text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200">
+                            Reservar Pocket Session
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CARD 2 (PENTHOUSE / ESTATE) -->
+                <div class="bg-cardBg dark:bg-darkCardBg rounded-3xl p-7 flex flex-col justify-between penthouse-highlight card-tide-2 relative">
+                    <div class="absolute -top-3 right-6 bg-champagne text-white text-[10px] font-extrabold tracking-widest uppercase px-3.5 py-1 rounded-full shadow-md z-10">
+                        MAIS ESCOLHIDO
+                    </div>
+
+                    <div>
+                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
+                            <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" 
+                                 alt="Penthouse / Estate Session" 
+                                 class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite">Estate Session</h3>
+                            <span class="text-[10px] font-extrabold text-amber-800 dark:text-champagne bg-champagne/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Salões & Áreas Abertas
+                            </span>
+                        </div>
+
+                        <p class="text-xs font-bold text-champagne uppercase tracking-widest mb-3">A Experiência Completa</p>
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold mb-6 leading-relaxed text-left">
+                            A transformação completa do salão de festas ou área externa em uma pista inesquecível.
+                        </p>
+
+                        <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
+                            <span class="text-[11px] font-extrabold text-mutedText dark:text-champagne/80 uppercase tracking-wider block mb-3">O que está incluído:</span>
+                            <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold text-left">
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Atração:</strong> DJ Profissional com Cabine Elegante + Curadoria sob medida.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Sonorização Dupla:</strong> 2 Sistemas de Som HD em estéreo (Preenchimento 360°).</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Cenografia Completa:</strong> 4 Pontos de Luz Arquitetural + 2 Moving Lights Dinâmicos.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Efeito Exclusivo:</strong> Névoa cênica <em class="italic">Subtle-Haze</em> para valorizar os raios de luz.*</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Duração:</strong> Até 4h de DJ Set Profissional sem interrupções.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-5 border-t border-subtleBorder dark:border-darkSubtleBorder">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
+                            <span class="text-lg font-extrabold text-champagne">R$ 1.290,00</span>
+                        </div>
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Quero%20escolher%20a%20Estate%20Session%20para%20meu%20evento." 
+                           target="_blank" 
+                           class="w-full block text-center bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing">
+                            Escolher Estate Session
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FAQ -->
+        <section id="faq" class="pt-4">
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Dúvidas Frequentes
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Respostas Práticas & Soluções</h2>
+            </div>
+
+            <div class="space-y-3.5 max-w-3xl mx-auto">
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-1">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">01.</span>
+                            Vocês atendem em condomínios de Bragança, Atibaia e Extrema?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Sim! Nossa base fica na região, o que nos permite atender com total facilidade condomínios e residências em Bragança Paulista, Atibaia, Extrema, Itatiba e arredores, com logística ágil e sem complicações.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-2">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">02.</span>
+                            E as regras de barulho e portaria do meu condomínio?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Trabalhamos com equipamentos de alta fidelidade e direcionamento acústico. Isso garante excelente sensação de pressão sonora na pista sem espalhar ruído para a vizinhança. Além disso, enviamos previamente todos os dados da equipe para liberação na portaria.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-3">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">03.</span>
+                            Como definimos o repertório da festa?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Alinhamos antes do evento o estilo musical desejado pelo aniversariante/anfitrião, incluindo os estilos favoritos e as músicas que 'não podem faltar', garantindo que a pista fique do jeito exato que você imaginou.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL -->
+        <section class="text-center pt-8 pb-4">
+            <div class="max-w-xl mx-auto bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-8 rounded-3xl shadow-sm">
+                <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite mb-3">Pronto para organizar seu próximo aniversário?</h3>
+                <p class="text-sm text-bodyText dark:text-[#D1C7BD] font-medium mb-6">Consulte a disponibilidade da sua data com atendimento rápido no WhatsApp.</p>
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20a%20disponibilidade%20de%20data%20para%20meu%20anivers%C3%A1rio/evento." 
+                   target="_blank" 
+                   class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-8 py-4 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing inline-block">
+                    Consultar Data no WhatsApp
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-cardBg dark:bg-darkCardBg border-t border-subtleBorder dark:border-darkSubtleBorder py-8 text-center text-xs text-mutedText font-medium">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="font-medium">Festa no Condomínio — festanocondominio.com.br</p>
+            <p>© copyright festanocondominio. todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            const html = document.documentElement;
+
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                html.classList.add('dark');
+            }
+
+            const toggleBtn = document.getElementById('theme-toggle');
+            const toggleMobileBtn = document.getElementById('theme-toggle-mobile');
+
+            function toggleTheme() {
+                html.classList.toggle('dark');
+            }
+
+            if (toggleBtn) toggleBtn.addEventListener('click', toggleTheme);
+            if (toggleMobileBtn) toggleMobileBtn.addEventListener('click', toggleTheme);
+
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
