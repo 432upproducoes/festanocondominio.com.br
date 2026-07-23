@@ -1,6 +1,6 @@
 <!-- 
 ====================================================================
-VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacotes (Pocket & Estate) com clareza nos itens de som, iluminação e opções de atração + Bloco de Atendimento Personalizado inferior.
+VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile no header + isolamento de script do tracker.
 ====================================================================
 -->
 <!DOCTYPE html>
@@ -308,11 +308,22 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
                 <a href="#faq" class="hover:text-champagne transition-colors py-1">Dúvidas</a>
             </nav>
 
+            <!-- Botão Desktop -->
             <div class="hidden md:flex items-center gap-4">
                 <a href="https://wa.me/5511966345171?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
                    target="_blank" rel="noopener"
                    class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-6 py-3.5 rounded-xl uppercase tracking-wider transition-all shadow-md block">
                     Consultar Data
+                </a>
+            </div>
+
+            <!-- Botão Mobile Restaurado -->
+            <div class="flex items-center gap-3 md:hidden">
+                <a href="https://wa.me/5511966345171?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
+                   target="_blank" rel="noopener"
+                   class="bg-champagne hover:bg-champagneHover text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-wider transition-all shadow-sm flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>Consultar</span>
                 </a>
             </div>
         </div>
@@ -672,30 +683,9 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
         });
     </script>
 
-    
-
-<!-- Analytics: IDs placeholder, ativar quando disponíveis (mesmo padrão do 432up.com) -->
-    <!--
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-XXXXXXX"></script>
+    <!-- Tracking de visitas e conversões (Supabase direto, com isolamento seguro) -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'GTM-XXXXXXX');
-    </script>
-    <script>
-      !function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'SEU_PIXEL_ID');
-      fbq('track', 'PageView');
-    </script>
-    <script type="text/javascript">
-      (function(c,l,a,r,i,t,y){...})(window, document, "clarity", "script", "SEU_CLARITY_ID");
-    </script>
-    -->
-
-    <!-- Tracking de visitas e conversões (Supabase direto, sem passar por Worker) -->
-    <script>
-    (function() {
+    ;(function() {
         'use strict';
 
         var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
@@ -718,11 +708,6 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
         }
         var sessionId = getSessionId();
 
-        // Envia dados via fetch com keepalive:true (sobrevive à navegação de página,
-        // funciona pro clique que leva a outro site como o WhatsApp).
-        // OBS: sendBeacon NÃO é usado aqui porque não permite enviar os headers
-        // 'apikey' e 'Authorization' que o Supabase exige — o insert falhava
-        // silenciosamente com sendBeacon.
         function send(table, payload) {
             var url = SUPABASE_URL + '/rest/v1/' + table;
             fetch(url, {
@@ -752,7 +737,6 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
             };
         }
 
-        // 1) Registra a visita assim que a página carrega
         var src = getSourceInfo();
         send('con_sessions', {
             id: sessionId,
@@ -768,7 +752,6 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
             page_path: window.location.pathname
         });
 
-        // GeoIP opcional, não bloqueia nada
         var controller = new AbortController();
         var t = setTimeout(function(){ controller.abort(); }, 1000);
         fetch('https://ipapi.co/json/', { signal: controller.signal })
@@ -781,8 +764,6 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
             })
             .catch(function(){});
 
-        // 2) Clique em qualquer botão de WhatsApp, em qualquer lugar da página,
-        //    mesmo que o botão seja criado depois deste script rodar.
         document.addEventListener('click', function(event) {
             var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
             if (!link) return;
@@ -805,12 +786,6 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
 
     })();
     </script>
-
-
-
-
-
-
 
 </body>
 </html>
