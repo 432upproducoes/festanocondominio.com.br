@@ -40,18 +40,24 @@
         <div>
             <div class="flex items-center gap-3">
                 <span class="text-xs uppercase tracking-widest text-champagne bg-champagne/10 px-3 py-1 rounded-full border border-champagne/30">Intelligence Hub</span>
-                <span class="text-xs text-mutedText">• Atualizado há 2 seg</span>
+                <span id="last-update" class="text-xs text-mutedText">• Carregando dados...</span>
             </div>
             <h1 class="text-2xl font-extrabold tracking-tight mt-1 text-white">Painel de Performance & Live Tracking</h1>
         </div>
         <div class="flex items-center gap-3">
-            <button class="bg-darkCard border border-darkBorder text-xs text-mutedText font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 hover:border-champagne/50 transition">
+            <!-- Filtro de Período Conectado -->
+            <div class="bg-darkCard border border-darkBorder text-xs text-mutedText font-semibold px-3 py-1.5 rounded-xl flex items-center gap-2 hover:border-champagne/50 transition">
                 <i data-lucide="calendar" class="w-4 h-4 text-champagne"></i>
-                <span>Últimos 30 dias</span>
-            </button>
-            <button class="bg-champagne hover:bg-champagneHover text-darkEspresso font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne">
-                <i data-lucide="download" class="w-4 h-4"></i>
-                <span>Exportar Relatório</span>
+                <select id="period-filter" class="bg-transparent text-white font-semibold focus:outline-none cursor-pointer">
+                    <option value="7" class="bg-darkCard text-white">Últimos 7 dias</option>
+                    <option value="15" class="bg-darkCard text-white">Últimos 15 dias</option>
+                    <option value="30" selected class="bg-darkCard text-white">Últimos 30 dias</option>
+                    <option value="90" class="bg-darkCard text-white">Últimos 90 dias</option>
+                </select>
+            </div>
+            <button onclick="carregarDashboard()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                <span>Atualizar</span>
             </button>
         </div>
     </header>
@@ -61,36 +67,36 @@
         
         <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
             <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Faturamento do Mês</span>
+                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Faturamento Estimado</span>
                 <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="dollar-sign" class="w-5 h-5"></i></span>
             </div>
-            <p class="text-3xl font-extrabold text-white mt-3">R$ 18.610<span class="text-sm font-normal text-mutedText">,00</span></p>
+            <p id="card-faturamento" class="text-3xl font-extrabold text-white mt-3">R$ 0<span class="text-sm font-normal text-mutedText">,00</span></p>
             <div class="flex items-center gap-1 text-emerald-400 text-xs mt-3 font-medium">
                 <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-                <span>+18.4% em relação ao mês anterior</span>
+                <span id="card-conversoes-qtd">0 intenções de reserva</span>
             </div>
         </div>
 
         <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
             <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">CAC Médio (Anúncios)</span>
-                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="target" class="w-5 h-5"></i></span>
+                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Total de Visitas</span>
+                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="users" class="w-5 h-5"></i></span>
             </div>
-            <p class="text-3xl font-extrabold text-white mt-3">R$ 142<span class="text-sm font-normal text-mutedText">,50</span></p>
-            <div class="flex items-center gap-1 text-emerald-400 text-xs mt-3 font-medium">
-                <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
-                <span>-8.2% de custo por cliente fechado</span>
+            <p id="card-visitas" class="text-3xl font-extrabold text-white mt-3">0</p>
+            <div class="flex items-center gap-1 text-champagne text-xs mt-3 font-medium">
+                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                <span>Sessões capturadas via tracker</span>
             </div>
         </div>
 
         <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
             <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">ROAS (Retorno sob Ads)</span>
+                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">ROAS (Estimativa Mídia)</span>
                 <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="zap" class="w-5 h-5"></i></span>
             </div>
-            <p class="text-3xl font-extrabold text-champagne mt-3">12.4x</p>
+            <p id="card-roas" class="text-3xl font-extrabold text-champagne mt-3">--</p>
             <div class="flex items-center gap-1 text-mutedText text-xs mt-3">
-                <span>R$ 1.500 investidos $\rightarrow$ R$ 18.610 liquidados</span>
+                <span id="card-roas-text">R$ 1.500 investidos → Retorno Mídia</span>
             </div>
         </div>
 
@@ -99,10 +105,10 @@
                 <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Ticket Médio</span>
                 <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="award" class="w-5 h-5"></i></span>
             </div>
-            <p class="text-3xl font-extrabold text-white mt-3">R$ 1.691<span class="text-sm font-normal text-mutedText">,80</span></p>
+            <p id="card-ticket" class="text-3xl font-extrabold text-white mt-3">R$ 0<span class="text-sm font-normal text-mutedText">,00</span></p>
             <div class="flex items-center gap-1 text-champagne text-xs mt-3 font-medium">
                 <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                <span>65% dos fechamentos são Estate Session</span>
+                <span id="card-estate-percent">0% Estate Session</span>
             </div>
         </div>
 
@@ -111,7 +117,7 @@
     <!-- Grid Principal: Gráficos + Live Tracking de Visita por IP -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         
-        <!-- Coluna Esquerda/Centro (2 Terços): Performance de Conversão e Cidades -->
+        <!-- Coluna Esquerda/Centro: Performance de Conversão e Cidades -->
         <div class="lg:col-span-2 space-y-8">
             
             <!-- Gráfico Funil & Vendas -->
@@ -121,7 +127,7 @@
                         <h3 class="text-lg font-bold text-white">Funil de Atração & Conversão WhatsApp</h3>
                         <p class="text-xs text-mutedText">Jornada dos visitantes até o clique final de reserva</p>
                     </div>
-                    <span class="text-xs bg-darkBorder text-champagne px-3 py-1 rounded-lg font-mono">Taxa Global: 4.8%</span>
+                    <span id="taxa-global-badge" class="text-xs bg-darkBorder text-champagne px-3 py-1 rounded-lg font-mono">Taxa Global: 0.0%</span>
                 </div>
                 <div class="h-64">
                     <canvas id="conversionChart"></canvas>
@@ -131,49 +137,14 @@
             <!-- Divisão por Regiões / Cidades e Pacotes -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Mapa de Origem por Cidade -->
+                <!-- Mapa de Origem por Cidade Dinâmico -->
                 <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl">
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
                         <i data-lucide="map-pin" class="w-4 h-4 text-champagne"></i>
                         Demandas por Região
                     </h3>
-                    <div class="space-y-3.5 text-xs">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-semibold text-white">Bragança Paulista</span>
-                                <span class="text-champagne font-mono font-bold">42% (38 leads)</span>
-                            </div>
-                            <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
-                                <div class="bg-champagne h-full rounded-full" style="width: 42%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-semibold text-white">Atibaia & Condomínios</span>
-                                <span class="text-champagne font-mono font-bold">33% (30 leads)</span>
-                            </div>
-                            <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
-                                <div class="bg-champagne h-full opacity-80 rounded-full" style="width: 33%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-semibold text-white">Extrema / Sul de Minas</span>
-                                <span class="text-champagne font-mono font-bold">15% (14 leads)</span>
-                            </div>
-                            <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
-                                <div class="bg-champagne h-full opacity-60 rounded-full" style="width: 15%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-semibold text-white">Itatiba & Região</span>
-                                <span class="text-champagne font-mono font-bold">10% (9 leads)</span>
-                            </div>
-                            <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
-                                <div class="bg-champagne h-full opacity-40 rounded-full" style="width: 10%"></div>
-                            </div>
-                        </div>
+                    <div id="cities-container" class="space-y-3.5 text-xs">
+                        <p class="text-mutedText">Carregando regiões...</p>
                     </div>
                 </div>
 
@@ -192,7 +163,7 @@
 
         </div>
 
-        <!-- Coluna Direita (1 Terço): RASTREADOR EM TEMPO REAL POR IP -->
+        <!-- Coluna Direita: RASTREADOR EM TEMPO REAL POR IP -->
         <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between pb-4 mb-4 border-b border-darkBorder">
@@ -206,65 +177,18 @@
                     <span class="text-[10px] text-mutedText bg-darkBorder px-2.5 py-1 rounded-full font-mono">Tracking por IP</span>
                 </div>
 
-                <!-- Feed de Atividades por Usuário -->
-                <div class="space-y-4 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
-                    
-                    <!-- Visitante 1 (Ativo / No Whats) -->
-                    <div class="p-3.5 bg-bodyBg border border-champagne/40 rounded-xl relative">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="text-xs font-bold text-champagne flex items-center gap-1.5">
-                                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                                IP: 177.18.241.XX (Atibaia)
-                            </span>
-                            <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">No WhatsApp</span>
-                        </div>
-                        <p class="text-[11px] text-mutedText mb-2">Dispositivo: iPhone • Origem: Google Ads</p>
-                        <div class="bg-darkCard p-2 rounded border border-darkBorder text-[11px] space-y-1 font-mono text-zinc-300">
-                            <p class="text-amber-300">1. Entrou pelo Hero (10:51)</p>
-                            <p>2. Viu Diferenciais Acústicos</p>
-                            <p class="text-champagne font-bold">3. Pausou na Estate Session (1m 40s)</p>
-                            <p>4. Abriu o FAQ de Barulho (Item 02)</p>
-                            <p class="text-emerald-400 font-bold">5. Clicou no Botão "Escolher Estate"</p>
-                        </div>
-                    </div>
-
-                    <!-- Visitante 2 (Navegando) -->
-                    <div class="p-3.5 bg-bodyBg border border-darkBorder rounded-xl">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="text-xs font-bold text-white flex items-center gap-1.5">
-                                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                                IP: 189.55.102.XX (Bragança P.)
-                            </span>
-                            <span class="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Navegando</span>
-                        </div>
-                        <p class="text-[11px] text-mutedText mb-2">Dispositivo: Android • Origem: Orgânico</p>
-                        <div class="bg-darkCard p-2 rounded border border-darkBorder text-[11px] space-y-1 font-mono text-zinc-400">
-                            <p>1. Entrou na Home (10:52)</p>
-                            <p class="text-champagne">2. Lendo Pocket Session (35s)</p>
-                        </div>
-                    </div>
-
-                    <!-- Visitante 3 (Saiu) -->
-                    <div class="p-3.5 bg-bodyBg border border-darkBorder opacity-60 rounded-xl">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="text-xs font-semibold text-zinc-400 flex items-center gap-1.5">
-                                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                                IP: 201.86.12.XX (Extrema)
-                            </span>
-                            <span class="text-[10px] text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded">Finalizado</span>
-                        </div>
-                        <p class="text-[11px] text-mutedText mb-2">Sessão encerrada (Duração: 2m 10s)</p>
-                    </div>
-
+                <!-- Feed de Atividades por Usuário Conectado ao Supabase -->
+                <div id="live-feed-container" class="space-y-4 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
+                    <p class="text-xs text-mutedText">Buscando últimas sessões...</p>
                 </div>
             </div>
 
-            <!-- Dica de Neuromarketing no Rodapé do Rastreador -->
+            <!-- Dica de Neuromarketing no Rodapé -->
             <div class="mt-4 pt-4 border-t border-darkBorder">
                 <div class="p-3 bg-champagne/10 border border-champagne/20 rounded-xl flex items-start gap-2.5">
                     <i data-lucide="lightbulb" class="w-4 h-4 text-champagne shrink-0 mt-0.5"></i>
                     <p class="text-[11px] text-amber-200/90 leading-snug">
-                        <strong>Insight do Lead de Atibaia:</strong> Ele gastou mais tempo vendo a <em>Estate Session</em> e abrindo a dúvida sobre barulho no condomínio. Aborde enfatizando a acústica aveludada!
+                        <strong>Insight em Tempo Real:</strong> Acompanhe a origem e o interesse dos clientes em tempo real para um atendimento via WhatsApp mais personalizado!
                     </p>
                 </div>
             </div>
@@ -273,26 +197,186 @@
 
     </div>
 
-    <!-- Scripts de Gráficos de Exemplo (Chart.js) -->
+    <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
     <script>
+        // ⚙️ CONFIGURAÇÃO DO SUPABASE
+    
+const SUPABASE_URL = "https://www.432up.com/supabase-api";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+
+        let conversionChartInstance = null;
+        let packagesChartInstance = null;
+
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
+            carregarDashboard();
 
-            // Gráfico de Funil
-            const ctx1 = document.getElementById('conversionChart').getContext('2d');
-            new Chart(ctx1, {
+            // Event Listener do Filtro de Dias
+            document.getElementById('period-filter').addEventListener('change', () => {
+                carregarDashboard();
+            });
+        });
+
+        async function carregarDashboard() {
+            const dias = parseInt(document.getElementById('period-filter').value) || 30;
+            
+            const dataLimite = new Date();
+            dataLimite.setDate(dataLimite.getDate() - dias);
+            const isoDate = dataLimite.toISOString();
+
+            document.getElementById('last-update').innerText = `• Atualizado agora (${dias}d)`;
+
+            try {
+                // 1. Busca Sessões Reais
+                const resSessions = await fetch(`${SUPABASE_URL}/rest/v1/con_sessions?created_at=gte.${isoDate}&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                const sessions = await resSessions.json();
+
+                // 2. Busca Conversões Reais
+                const resConversions = await fetch(`${SUPABASE_URL}/rest/v1/con_conversion_events?created_at=gte.${isoDate}&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                const conversions = await resConversions.json();
+
+                // 3. Processa e Atualiza os Cards
+                atualizarCards(sessions, conversions);
+                
+                // 4. Renderiza Cidades e Live Feed
+                renderizarCidades(sessions);
+                renderizarLiveFeed(sessions, conversions);
+
+                // 5. Atualiza os Gráficos
+                renderizarGraficoFunil(sessions, conversions);
+                renderizarGraficoPacotes(conversions);
+
+            } catch (err) {
+                console.error("Erro ao carregar dados do Supabase:", err);
+            }
+        }
+
+        function atualizarCards(sessions, conversions) {
+            const totalVisitas = sessions.length;
+            const totalConversoes = conversions.length;
+
+            const faturamento = conversions.reduce((sum, c) => sum + Number(c.estimated_value || 0), 0);
+            const ticketMedio = totalConversoes > 0 ? (faturamento / totalConversoes) : 0;
+            const taxaGlobal = totalVisitas > 0 ? ((totalConversoes / totalVisitas) * 100).toFixed(1) : 0;
+
+            const estateConversoes = conversions.filter(c => (c.package_name || '').toLowerCase().includes('estate')).length;
+            const percentEstate = totalConversoes > 0 ? Math.round((estateConversoes / totalConversoes) * 100) : 0;
+
+            document.getElementById('card-faturamento').innerHTML = `R$ ${faturamento.toLocaleString('pt-BR')}<span class="text-sm font-normal text-mutedText">,00</span>`;
+            document.getElementById('card-conversoes-qtd').innerText = `${totalConversoes} cliques no WhatsApp`;
+            document.getElementById('card-visitas').innerText = totalVisitas.toLocaleString('pt-BR');
+            document.getElementById('card-ticket').innerHTML = `R$ ${ticketMedio.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('card-estate-percent').innerText = `${percentEstate}% Estate Session`;
+            document.getElementById('taxa-global-badge').innerText = `Taxa Global: ${taxaGlobal}%`;
+
+            // ROAS Estimado baseado em investimento base de R$ 1.500
+            const roas = faturamento > 0 ? (faturamento / 1500).toFixed(1) + 'x' : '0.0x';
+            document.getElementById('card-roas').innerText = roas;
+            document.getElementById('card-roas-text').innerText = `R$ 1.500 investidos → R$ ${faturamento.toLocaleString('pt-BR')} gerados`;
+        }
+
+        function renderizarCidades(sessions) {
+            const cityCounts = {};
+            sessions.forEach(s => {
+                const city = s.city && s.city !== 'Desconhecido' ? s.city : 'Outras Regiões';
+                cityCounts[city] = (cityCounts[city] || 0) + 1;
+            });
+
+            const sortedCities = Object.entries(cityCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 4);
+
+            const total = sessions.length || 1;
+            const container = document.getElementById('cities-container');
+            container.innerHTML = '';
+
+            if (sortedCities.length === 0) {
+                container.innerHTML = '<p class="text-mutedText">Nenhuma visita registrada no período.</p>';
+                return;
+            }
+
+            sortedCities.forEach(([city, count]) => {
+                const percent = Math.round((count / total) * 100);
+                container.innerHTML += `
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="font-semibold text-white">${city}</span>
+                            <span class="text-champagne font-mono font-bold">${percent}% (${count} acessos)</span>
+                        </div>
+                        <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
+                            <div class="bg-champagne h-full rounded-full" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderizarLiveFeed(sessions, conversions) {
+            const container = document.getElementById('live-feed-container');
+            container.innerHTML = '';
+
+            const convertedSessionIds = new Set(conversions.map(c => c.session_id));
+            const recentSessions = sessions.slice(0, 5);
+
+            if (recentSessions.length === 0) {
+                container.innerHTML = '<p class="text-xs text-mutedText">Nenhuma sessão recente registrada.</p>';
+                return;
+            }
+
+            recentSessions.forEach(s => {
+                const converted = convertedSessionIds.has(s.id);
+                const city = s.city || 'Origem Direta';
+                const device = s.device || 'Desktop';
+                const source = s.source || 'Direto';
+                const ip = s.ip_address ? s.ip_address.substring(0, 10) + '.XX' : '189.XX.XX.XX';
+
+                const statusTag = converted 
+                    ? '<span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">No WhatsApp</span>'
+                    : '<span class="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Navegando</span>';
+
+                const borderColor = converted ? 'border-champagne/40' : 'border-darkBorder';
+
+                container.innerHTML += `
+                    <div class="p-3.5 bg-bodyBg border ${borderColor} rounded-xl">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <span class="text-xs font-bold ${converted ? 'text-champagne' : 'text-white'} flex items-center gap-1.5">
+                                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                                IP: ${ip} (${city})
+                            </span>
+                            ${statusTag}
+                        </div>
+                        <p class="text-[11px] text-mutedText mb-2">Dispositivo: ${device} • Origem: ${source}</p>
+                        <div class="bg-darkCard p-2 rounded border border-darkBorder text-[11px] space-y-1 font-mono text-zinc-300">
+                            <p class="text-amber-300">1. Acessou: ${s.page_path || '/'}</p>
+                            ${converted ? '<p class="text-emerald-400 font-bold">2. Clicou no Botão WhatsApp</p>' : '<p>2. Navegando na página...</p>'}
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function renderizarGraficoFunil(sessions, conversions) {
+            const ctx = document.getElementById('conversionChart').getContext('2d');
+            if (conversionChartInstance) conversionChartInstance.destroy();
+
+            conversionChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+                    labels: ['Período Atual'],
                     datasets: [{
-                        label: 'Visitantes no Site',
-                        data: [420, 580, 710, 890],
+                        label: 'Visitantes Totais',
+                        data: [sessions.length],
                         borderColor: '#71717A',
                         backgroundColor: 'transparent',
                         tension: 0.4
                     }, {
                         label: 'Cliques no WhatsApp',
-                        data: [22, 31, 39, 48],
+                        data: [conversions.length],
                         borderColor: '#D4B068',
                         backgroundColor: 'rgba(212, 176, 104, 0.1)',
                         fill: true,
@@ -309,15 +393,29 @@
                     }
                 }
             });
+        }
 
-            // Gráfico de Donut de Pacotes
-            const ctx2 = document.getElementById('packagesChart').getContext('2d');
-            new Chart(ctx2, {
+        function renderizarGraficoPacotes(conversions) {
+            const ctx = document.getElementById('packagesChart').getContext('2d');
+            if (packagesChartInstance) packagesChartInstance.destroy();
+
+            let estateCount = 0;
+            let pocketCount = 0;
+            let outrosCount = 0;
+
+            conversions.forEach(c => {
+                const pkg = (c.package_name || '').toLowerCase();
+                if (pkg.includes('estate')) estateCount++;
+                else if (pkg.includes('pocket')) pocketCount++;
+                else outrosCount++;
+            });
+
+            packagesChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Estate Session (R$ 1.990)', 'Pocket Session (R$ 1.290)', 'Combo Duo / Especial'],
+                    labels: ['Estate Session', 'Pocket Session', 'Outros/Geral'],
                     datasets: [{
-                        data: [65, 25, 10],
+                        data: [estateCount || 1, pocketCount, outrosCount],
                         backgroundColor: ['#D4B068', '#C29D55', '#382D24'],
                         borderWidth: 0
                     }]
@@ -328,7 +426,7 @@
                     plugins: { legend: { position: 'bottom', labels: { color: '#A1A1AA', font: { size: 10 } } } }
                 }
             });
-        });
+        }
     </script>
 </body>
 </html>
