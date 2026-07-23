@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Teste Isolado de Tracking</title>
+</head>
+<body style="background:#111;color:#fff;font-family:sans-serif;padding:40px;">
+
+<h1>Teste isolado</h1>
+<p id="status">Carregando...</p>
+
+<a href="https://wa.me/5511948564577?text=teste" style="display:inline-block;padding:16px 24px;background:gold;color:#111;font-weight:bold;text-decoration:none;border-radius:8px;">
+  BOTÃO DE TESTE WHATSAPP
+</a>
+
+<p style="margin-top:30px;">Session ID: <span id="sid"></span></p>
+<p>Cliques capturados: <span id="contador">0</span></p>
+
+<script>
+(function() {
+    'use strict';
+
+    var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+
+    function getSessionId() {
+        var sid = 'teste_isolado_' + Date.now();
+        return sid;
+    }
+    var sessionId = getSessionId();
+    document.getElementById('sid').innerText = sessionId;
+
+    function send(table, payload, label) {
+        fetch(SUPABASE_URL + '/rest/v1/' + table, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Prefer': 'return=representation'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(function(r){ return r.text().then(function(t){ return {status: r.status, body: t}; }); })
+        .then(function(res){
+            document.getElementById('status').innerText = label + ' -> STATUS ' + res.status + ' | ' + res.body;
+            console.log(label, res.status, res.body);
+        })
+        .catch(function(e){
+            document.getElementById('status').innerText = 'ERRO DE REDE em ' + label + ': ' + e;
+            console.error(label, e);
+        });
+    }
+
+    // Grava a sessão de teste assim que a página carrega
+    send('con_sessions', {
+        id: sessionId,
+        city: 'Teste Isolado',
+        is_bot: false
+    }, 'SESSAO');
+
+    var contador = 0;
+
+    // Listener delegado no document inteiro, fase de captura
+    document.addEventListener('click', function(event) {
+        var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
+        if (!link) {
+            console.log('Clique detectado, mas NÃO era num link wa.me. Alvo:', event.target);
+            return;
+        }
+        contador++;
+        document.getElementById('contador').innerText = contador;
+
+        send('con_conversion_events', {
+            session_id: sessionId,
+            package_name: 'Teste Isolado',
+            estimated_value: 1
+        }, 'CLIQUE');
+    }, true);
+
+    console.log('Script de teste isolado carregado. Sessão:', sessionId);
+})();
+</script>
+
+</body>
+</html>

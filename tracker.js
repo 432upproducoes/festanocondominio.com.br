@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    // ⚙️ CONFIGURAÇÃO DO SUPABASE
+    // ⚙️ SUPABASE CONFIGURATION (URL direta, sem passar pelo Worker do 432up.com)
     const SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
@@ -32,7 +32,7 @@
 
     async function sendToSupabase(table, data) {
         try {
-            await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,31 +43,56 @@
                 body: JSON.stringify(data),
                 keepalive: true
             });
+            if (!res.ok) {
+                const errText = await res.text().catch(() => '');
+                console.warn('[tracker] Falha ao gravar em', table, res.status, errText);
+            }
         } catch (err) {
-            // Falha silenciosa
+            console.warn('[tracker] Erro de rede ao gravar em', table, err);
         }
     }
 
-    // Registrar Conversão de Forma Garantida
-    window.registrarConversao = function(packageName, estimatedValue) {
-        const sessionId = getSessionId();
-        sendToSupabase('con_conversion_events', {
-            session_id: sessionId,
-            package_name: packageName,
-            estimated_value: estimatedValue
-        });
-    };
+    let sessionId; // preenchido em trackSession()
 
-    // Execução Principal de Sessão
-    function initTracker() {
+    function packageFromHref(href) {
+        const h = (href || '').toLowerCase();
+        if (h.includes('1.290') || h.includes('pocket')) {
+            return { packageName: 'Pocket Session', estimatedValue: 1290.00 };
+        }
+        if (h.includes('1.990') || h.includes('estate')) {
+            return { packageName: 'Estate Session', estimatedValue: 1990.00 };
+        }
+        return { packageName: 'Consulta Geral', estimatedValue: 0.00 };
+    }
+
+    // Listener delegado: funciona mesmo se os botões wa.me forem
+    // renderizados/inseridos na página DEPOIS do tracker.js carregar.
+    function attachDelegatedClickTracking() {
+        document.addEventListener('click', function(event) {
+            const link = event.target.closest('a[href*="wa.me"]');
+            if (!link) return;
+
+            const href = link.getAttribute('href') || '';
+            const { packageName, estimatedValue } = packageFromHref(href);
+
+            sendToSupabase('con_conversion_events', {
+                session_id: sessionId,
+                package_name: packageName,
+                estimated_value: estimatedValue
+            });
+        }, true); // captura na fase de captura, dispara antes de qualquer navegação
+    }
+
+    // Runs immediately without blocking on external APIs
+    function trackSession() {
         if (isBot()) return;
 
-        const sessionId = getSessionId();
+        sessionId = getSessionId();
         const sourceInfo = getSourceInfo();
 
         const sessionPayload = {
             id: sessionId,
-            city: 'Bragança Paulista',
+            city: 'Bragança Paulista', // Default location fallback
             region: 'SP',
             is_bot: false,
             source: sourceInfo.source,
@@ -79,32 +104,36 @@
             page_path: window.location.pathname
         };
 
+        // Send session payload immediately
         sendToSupabase('con_sessions', sessionPayload);
 
-        // Delegação de Eventos Global (Garante captura de QUALQUER clique em link do WhatsApp)
-        document.addEventListener('click', function(e) {
-            const target = e.target.closest('a[href*="wa.me"]');
-            if (target) {
-                const href = target.getAttribute('href') || '';
-                let packageName = 'Consulta Geral';
-                let estimatedValue = 0.00;
+        // Optional non-blocking GeoIP check with 1-second timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1000);
 
-                if (href.includes('1.290') || href.toLowerCase().includes('pocket')) {
-                    packageName = 'Pocket Session';
-                    estimatedValue = 1290.00;
-                } else if (href.includes('1.990') || href.toLowerCase().includes('estate')) {
-                    packageName = 'Estate Session';
-                    estimatedValue = 1990.00;
+        fetch('https://ipapi.co/json/', { signal: controller.signal })
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                clearTimeout(timeoutId);
+                if (data && data.city) {
+                    // Update session location if resolved
+                    sendToSupabase('con_sessions', {
+                        id: sessionId,
+                        city: data.city,
+                        region: data.region || 'SP',
+                        ip_address: data.ip || ''
+                    });
                 }
+            })
+            .catch(() => {});
 
-                window.registrarConversao(packageName, estimatedValue);
-            }
-        }, true);
+        // Attach WhatsApp conversion click listener (delegado, cobre botões futuros também)
+        attachDelegatedClickTracking();
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initTracker);
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        trackSession();
     } else {
-        initTracker();
+        document.addEventListener('DOMContentLoaded', trackSession);
     }
 })();
