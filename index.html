@@ -672,90 +672,106 @@ VERSÃO ATUAL: v1.52 | ATUALIZAÇÃO: Refinamento descritivo completo dos pacote
         });
     </script>
 
-    <!-- Tracking Supabase -->
-    <script>
-    (function() {
-        'use strict';
-        var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
-        var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+    <!-- Tracking Supabase (Corrigido & Blindado) -->
+<script>
+(function() {
+    'use strict';
+    var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
-        function isBot() {
-            var ua = navigator.userAgent.toLowerCase();
-            var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
-            return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
+    function isBot() {
+        var ua = navigator.userAgent.toLowerCase();
+        var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
+        return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
+    }
+    if (isBot()) return;
+
+    function getSessionId() {
+        var sid = sessionStorage.getItem('con_session_id');
+        if (!sid) {
+            sid = 'con_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
+            sessionStorage.setItem('con_session_id', sid);
         }
-        if (isBot()) return;
+        return sid;
+    }
+    var sessionId = getSessionId();
 
-        function getSessionId() {
-            var sid = sessionStorage.getItem('con_session_id');
-            if (!sid) {
-                sid = 'con_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
-                sessionStorage.setItem('con_session_id', sid);
+    function send(table, payload) {
+        var url = SUPABASE_URL + '/rest/v1/' + table;
+        return fetch(url, {
+            method: 'POST',
+            keepalive: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload)
+        }).then(function(res) {
+            if (!res.ok) {
+                res.text().then(function(t) { console.warn('[tracking error]', table, res.status, t); });
             }
-            return sid;
-        }
-        var sessionId = getSessionId();
+        }).catch(function(e) { console.warn('[tracking network error]', e); });
+    }
 
-        function send(table, payload) {
-            var url = SUPABASE_URL + '/rest/v1/' + table;
-            fetch(url, {
-                method: 'POST',
-                keepalive: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify(payload)
-            }).catch(function(e){});
+    function getSourceInfo() {
+        var params = new URLSearchParams(window.location.search);
+        return {
+            source: params.get('utm_source') || 'direct',
+            medium: params.get('utm_medium') || 'none',
+            campaign: params.get('utm_campaign') || 'none',
+            referrer: document.referrer || 'direct'
+        };
+    }
+
+    // 1. Registra a visita inicial
+    var src = getSourceInfo();
+    send('con_sessions', {
+        id: sessionId,
+        city: 'Bragança Paulista',
+        region: 'SP',
+        is_bot: false,
+        source: src.source,
+        medium: src.medium,
+        campaign: src.campaign,
+        referrer: src.referrer,
+        device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        browser: navigator.userAgent,
+        page_path: window.location.pathname
+    });
+
+    // 2. Registra o clique do WhatsApp
+    document.addEventListener('click', function(event) {
+        var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
+        if (!link) return;
+
+        var href = (link.getAttribute('href') || '').toLowerCase();
+        var packageName = 'Consulta Geral';
+        var value = 0;
+        
+        if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1 || href.indexOf('1290') > -1) {
+            packageName = 'Pocket Session'; 
+            value = 1290.00;
+        } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1 || href.indexOf('1990') > -1) {
+            packageName = 'Estate Session'; 
+            value = 1990.00;
         }
 
-        function getSourceInfo() {
-            var params = new URLSearchParams(window.location.search);
-            return {
-                source: params.get('utm_source') || 'direct',
-                medium: params.get('utm_medium') || 'none',
-                campaign: params.get('utm_campaign') || 'none',
-                referrer: document.referrer || 'direct'
-            };
-        }
-
-        var src = getSourceInfo();
-        send('con_sessions', {
-            id: sessionId,
-            city: 'Bragança Paulista',
-            region: 'SP',
-            is_bot: false,
-            source: src.source,
-            medium: src.medium,
-            campaign: src.campaign,
-            referrer: src.referrer,
-            device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-            browser: navigator.userAgent,
-            page_path: window.location.pathname
+        send('con_conversion_events', {
+            session_id: sessionId,
+            package_name: packageName,
+            estimated_value: value
         });
+    }, true);
+})();
+</script>
 
-        document.addEventListener('click', function(event) {
-            var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
-            if (!link) return;
 
-            var href = (link.getAttribute('href') || '').toLowerCase();
-            var packageName = 'Consulta Geral';
-            var value = 0;
-            if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1) {
-                packageName = 'Pocket Session'; value = 1290.00;
-            } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1) {
-                packageName = 'Estate Session'; value = 1990.00;
-            }
 
-            send('con_conversion_events', {
-                session_id: sessionId,
-                package_name: packageName,
-                estimated_value: value
-            });
-        }, true);
-    })();
-    </script>
+
+
+
+
 </body>
 </html>
