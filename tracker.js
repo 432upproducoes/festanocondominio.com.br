@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    // ⚙️ SUPABASE CONFIGURATION
-    const SUPABASE_URL = "https://www.432up.com/supabase-api";
+    // ⚙️ CONFIGURAÇÃO DO SUPABASE
+    const SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
     function isBot() {
@@ -44,12 +44,22 @@
                 keepalive: true
             });
         } catch (err) {
-            // Silent error handling
+            // Falha silenciosa
         }
     }
 
-    // Runs immediately without blocking on external APIs
-    function trackSession() {
+    // Registrar Conversão de Forma Garantida
+    window.registrarConversao = function(packageName, estimatedValue) {
+        const sessionId = getSessionId();
+        sendToSupabase('con_conversion_events', {
+            session_id: sessionId,
+            package_name: packageName,
+            estimated_value: estimatedValue
+        });
+    };
+
+    // Execução Principal de Sessão
+    function initTracker() {
         if (isBot()) return;
 
         const sessionId = getSessionId();
@@ -57,7 +67,7 @@
 
         const sessionPayload = {
             id: sessionId,
-            city: 'Bragança Paulista', // Default location fallback
+            city: 'Bragança Paulista',
             region: 'SP',
             is_bot: false,
             source: sourceInfo.source,
@@ -69,33 +79,13 @@
             page_path: window.location.pathname
         };
 
-        // Send session payload immediately
         sendToSupabase('con_sessions', sessionPayload);
 
-        // Optional non-blocking GeoIP check with 1-second timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1000);
-
-        fetch('https://ipapi.co/json/', { signal: controller.signal })
-            .then(res => res.ok ? res.json() : null)
-            .then(data => {
-                clearTimeout(timeoutId);
-                if (data && data.city) {
-                    // Update session location if resolved
-                    sendToSupabase('con_sessions', {
-                        id: sessionId,
-                        city: data.city,
-                        region: data.region || 'SP',
-                        ip_address: data.ip || ''
-                    });
-                }
-            })
-            .catch(() => {});
-
-        // Attach WhatsApp conversion click listeners
-        document.querySelectorAll('a[href*="wa.me"]').forEach(button => {
-            button.addEventListener('click', () => {
-                const href = button.getAttribute('href') || '';
+        // Delegação de Eventos Global (Garante captura de QUALQUER clique em link do WhatsApp)
+        document.addEventListener('click', function(e) {
+            const target = e.target.closest('a[href*="wa.me"]');
+            if (target) {
+                const href = target.getAttribute('href') || '';
                 let packageName = 'Consulta Geral';
                 let estimatedValue = 0.00;
 
@@ -107,18 +97,14 @@
                     estimatedValue = 1990.00;
                 }
 
-                sendToSupabase('con_conversion_events', {
-                    session_id: sessionId,
-                    package_name: packageName,
-                    estimated_value: estimatedValue
-                });
-            });
-        });
+                window.registrarConversao(packageName, estimatedValue);
+            }
+        }, true);
     }
 
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        trackSession();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTracker);
     } else {
-        document.addEventListener('DOMContentLoaded', trackSession);
+        initTracker();
     }
 })();
