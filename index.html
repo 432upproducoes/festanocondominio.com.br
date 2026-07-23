@@ -684,39 +684,33 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
     </script>
 
 
-
-   <!-- Tracking de visitas, tempo de permanência e conversões (Solução Definitiva: Pageview Único) -->
+<!-- Tracking de visitas e conversões (Versão Resiliente / Janela Normal & Anônima) -->
 <script>
 ;(function() {
     'use strict';
 
-    var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
-    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
-
+    // 1. FILTRO DE BOTS (Removida a trava rígida do webdriver que bloqueava abas normais)
     function isBot() {
-        var ua = navigator.userAgent.toLowerCase();
-        var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
-        return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
+        var ua = (navigator.userAgent || '').toLowerCase();
+        var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse','pagespeed','gtmetrix'];
+        return bots.some(function(k){ return ua.indexOf(k) > -1; });
     }
     if (isBot()) return;
 
-    // Gera um ID totalmente novo a cada carregamento de página (F5 ou nova navegação), 
-    // garantindo que a aba normal se comporte exatamente como a anônima (INSERT limpo).
-    var visitId = 'vis_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
+    // Impede execução dupla dentro de iframes
+    try { if (window.self !== window.top) return; } catch(e) { return; }
+
+    var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+
+    // 2. GERAÇÃO DE SESSÃO ÚNICA POR VISITA
+    var visitId = 'vis_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
     var startTime = Date.now();
     var sessionSent = false;
 
-    function send(table, payload, useBeacon) {
-        var url = SUPABASE_URL + '/rest/v1/' + table;
-        
-        if (useBeacon && navigator.sendBeacon) {
-            var beaconUrl = url + '?apikey=' + SUPABASE_KEY;
-            var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-            navigator.sendBeacon(beaconUrl, blob);
-            return;
-        }
-
-        fetch(url, {
+    // 3. HELPERS DE ENVIO (POST e PATCH com suporte a keepalive)
+    function sendInsert(table, payload) {
+        return fetch(SUPABASE_URL + '/rest/v1/' + table, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -725,7 +719,22 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                 'Prefer': 'return=minimal'
             },
             body: JSON.stringify(payload)
-        }).catch(function(e) { console.warn('[tracking] erro:', e); });
+        }).catch(function(e) { console.warn('[tracking insert err]', e); });
+    }
+
+    function sendUpdateBeacon(table, filter, payload) {
+        var url = SUPABASE_URL + '/rest/v1/' + table + '?' + filter;
+        return fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload),
+            keepalive: true // Garante envio ao fechar/trocar de aba na janela normal
+        }).catch(function(){});
     }
 
     function getSourceInfo() {
@@ -739,9 +748,9 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
     }
 
     var src = getSourceInfo();
-    
-    // Registro inicial da visita (Sempre um INSERT novo e limpo)
-    send('con_sessions', {
+
+    // 4. REGISTRO INICIAL DA VISITA (Garante o INSERT limpo no Supabase)
+    sendInsert('con_sessions', {
         id: visitId,
         city: 'Bragança Paulista',
         region: 'SP',
@@ -754,69 +763,45 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         browser: navigator.userAgent,
         page_path: window.location.pathname,
         duration_seconds: 0
-    }, false);
+    });
 
-    // Geolocalização por IP rápida
-    var controller = new AbortController();
-    var t = setTimeout(function(){ controller.abort(); }, 1000);
-    fetch('https://ipapi.co/json/', { signal: controller.signal })
-        .then(function(r){ return r.ok ? r.json() : null; })
-        .then(function(data){
-            clearTimeout(t);
-            if (data && data.city) {
-                send('con_sessions', { id: visitId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' }, false);
-            }
-        })
-        .catch(function(){});
+    // Geolocalização IP em segundo plano com timeout
+    try {
+        var controller = new AbortController();
+        var t = setTimeout(function(){ controller.abort(); }, 1500);
+        fetch('https://ipapi.co/json/', { signal: controller.signal })
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(data){
+                clearTimeout(t);
+                if (data && data.city) {
+                    sendUpdateBeacon('con_sessions', 'id=eq.' + visitId, {
+                        city: data.city,
+                        region: data.region || 'SP',
+                        ip_address: data.ip || ''
+                    });
+                }
+            })
+            .catch(function(){});
+    } catch(e) {}
 
-    // Atualização do tempo de permanência acumulado
+    // 5. ATUALIZAÇÃO DE DURAÇÃO (Usa keepalive para a janela normal não perder o tempo)
     function updateDuration(isClosing) {
-        if (sessionSent) return;
-        var duration = Math.round((Date.now() - startTime) / 1000);
-        
-        // Envia via PATCH para atualizar apenas a duração desta visita específica
-        var url = SUPABASE_URL + '/rest/v1/con_sessions?id=eq.' + visitId;
-        var payload = { duration_seconds: duration };
-
-        if (isClosing && navigator.sendBeacon) {
-            var beaconUrl = url + '&apikey=' + SUPABASE_KEY;
-            var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-            navigator.sendBeacon(beaconUrl, blob);
-            sessionSent = true;
-            return;
-        }
-
-        fetch(url, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY,
-                'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify(payload)
-        }).catch(function(e) { console.warn('[tracking duration] erro:', e); });
-
+        if (sessionSent && isClosing) return;
+        var duration = Math.max(0, Math.round((Date.now() - startTime) / 1000));
+        sendUpdateBeacon('con_sessions', 'id=eq.' + visitId, { duration_seconds: duration });
         if (isClosing) sessionSent = true;
     }
 
-    // Atualiza o tempo periodicamente a cada 15 segundos
-    setInterval(function() {
-        updateDuration(false);
-    }, 15000);
+    // Atualiza periodicamente a cada 15s
+    setInterval(function() { updateDuration(false); }, 15000);
 
-    // Captura saída da página
-    window.addEventListener('beforeunload', function() {
-        updateDuration(true);
-    });
-
+    // Captura saída/ocultação da aba
+    window.addEventListener('pagehide', function() { updateDuration(true); });
     document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'hidden') {
-            updateDuration(true);
-        }
+        if (document.visibilityState === 'hidden') updateDuration(true);
     });
 
-    // Rastreamento de cliques em botões de conversão (WhatsApp) vinculado ao visitId correto
+    // 6. RASTREAMENTO DE CONVERSÕES (WhatsApp)
     document.addEventListener('click', function(event) {
         var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
         if (!link) return;
@@ -824,23 +809,24 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         var href = (link.getAttribute('href') || '').toLowerCase();
         var packageName = 'Consulta Geral';
         var value = 0;
+
         if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1) {
-            packageName = 'Pocket Session'; value = 1290.00;
+            packageName = 'Pocket Session'; 
+            value = 1290.00;
         } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1) {
-            packageName = 'Estate Session'; value = 1990.00;
+            packageName = 'Estate Session'; 
+            value = 1990.00;
         }
 
-        send('con_conversion_events', {
+        sendInsert('con_conversion_events', {
             session_id: visitId,
             package_name: packageName,
             estimated_value: value
-        }, false);
+        });
     }, true);
 
 })();
 </script>
-
-
 
 
 
