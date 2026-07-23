@@ -683,7 +683,9 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         });
     </script>
 
-    <!-- Tracking de visitas e conversões (Supabase direto, com isolamento seguro) -->
+
+
+    <!-- Tracking de visitas, tempo de permanência e conversões (Supabase direto) -->
     <script>
     ;(function() {
         'use strict';
@@ -698,18 +700,44 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         }
         if (isBot()) return;
 
+        // Usa localStorage com expiração de 30 minutos de inatividade para novas visitas limpas
         function getSessionId() {
-            var sid = sessionStorage.getItem('con_session_id');
-            if (!sid) {
-                sid = 'con_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
-                sessionStorage.setItem('con_session_id', sid);
-            }
-            return sid;
-        }
-        var sessionId = getSessionId();
+            var sessionKey = 'con_session_data';
+            var now = Date.now();
+            var thirtyMinutes = 30 * 60 * 1000;
+            
+            try {
+                var stored = JSON.parse(localStorage.getItem(sessionKey));
+                if (stored && stored.id && (now - stored.timestamp < thirtyMinutes)) {
+                    stored.timestamp = now; // Atualiza o tempo da sessão ativa
+                    localStorage.setItem(sessionKey, JSON.stringify(stored));
+                    return stored.id;
+                }
+            } catch(e) {}
 
-        function send(table, payload) {
+            var newId = 'con_' + Math.random().toString(36).slice(2, 15) + now.toString(36);
+            try {
+                localStorage.setItem(sessionKey, JSON.stringify({ id: newId, timestamp: now }));
+            } catch(e) {}
+            return newId;
+        }
+
+        var sessionId = getSessionId();
+        var startTime = Date.now();
+        var sessionSent = false;
+
+        function send(table, payload, useBeacon) {
             var url = SUPABASE_URL + '/rest/v1/' + table;
+            
+            // Se for encerramento de página, usamos sendBeacon para garantir envio
+            if (useBeacon && navigator.sendBeacon) {
+                var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                // Adicionamos headers via fetch customizado se não for beacon, mas para beacon o Supabase REST exigeapikey na URL ou headers simulados (o Supabase aceita apiKey via query param ?apikey=...)
+                var beaconUrl = url + '?apikey=' + SUPABASE_KEY;
+                navigator.sendBeacon(beaconUrl, blob);
+                return;
+            }
+
             fetch(url, {
                 method: 'POST',
                 keepalive: true,
@@ -720,11 +748,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                     'Prefer': 'return=minimal'
                 },
                 body: JSON.stringify(payload)
-            }).then(function(res) {
-                if (!res.ok) {
-                    res.text().then(function(t) { console.warn('[tracking] Falha', table, res.status, t); });
-                }
-            }).catch(function(e) { console.warn('[tracking] erro de rede:', e); });
+            }).catch(function(e) { console.warn('[tracking] erro:', e); });
         }
 
         function getSourceInfo() {
@@ -738,6 +762,8 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         }
 
         var src = getSourceInfo();
+        
+        // Dispara o registro inicial da sessão (ou atualiza na tabela caso use UPSERT no Supabase)
         send('con_sessions', {
             id: sessionId,
             city: 'Bragança Paulista',
@@ -749,9 +775,11 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
             referrer: src.referrer,
             device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
             browser: navigator.userAgent,
-            page_path: window.location.pathname
-        });
+            page_path: window.location.pathname,
+            duration_seconds: 0
+        }, false);
 
+        // Geolocalização por IP rápida
         var controller = new AbortController();
         var t = setTimeout(function(){ controller.abort(); }, 1000);
         fetch('https://ipapi.co/json/', { signal: controller.signal })
@@ -759,11 +787,42 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
             .then(function(data){
                 clearTimeout(t);
                 if (data && data.city) {
-                    send('con_sessions', { id: sessionId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' });
+                    send('con_sessions', { id: sessionId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' }, false);
                 }
             })
             .catch(function(){});
 
+        // Função para calcular e atualizar o tempo de permanência total
+        function updateDuration(isClosing) {
+            if (sessionSent) return;
+            var duration = Math.round((Date.now() - startTime) / 1000);
+            
+            // Envia o tempo total de permanência acumulado
+            send('con_sessions', {
+                id: sessionId,
+                duration_seconds: duration
+            }, isClosing);
+
+            if (isClosing) sessionSent = true;
+        }
+
+        // Atualiza o tempo periodicamente a cada 15 segundos caso o usuário continue na página
+        setInterval(function() {
+            updateDuration(false);
+        }, 15000);
+
+        // Captura saída da página (fechamento de aba, troca de URL)
+        window.addEventListener('beforeunload', function() {
+            updateDuration(true);
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                updateDuration(true);
+            }
+        });
+
+        // Rastreamento de cliques em botões de conversão (WhatsApp)
         document.addEventListener('click', function(event) {
             var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
             if (!link) return;
@@ -781,11 +840,15 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                 session_id: sessionId,
                 package_name: packageName,
                 estimated_value: value
-            });
+            }, false);
         }, true);
 
     })();
     </script>
+
+
+
+
 
 </body>
 </html>
