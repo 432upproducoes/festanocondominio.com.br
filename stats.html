@@ -1,12 +1,104 @@
+<!-- VERSÃO 1.2 -->
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Executivo | Festa no Condomínio & 432UP!</title>
+
+    <title>Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região</title>
+    <meta name="description" content="Música ao vivo de alta fidelidade, DJ profissional e iluminação cênica sob medida para celebrações em condomínios e casas de alto padrão em Bragança, Atibaia e região.">
+    <meta name="keywords" content="Música ao vivo e DJ Bragança Paulista, voz e violão condomínio Atibaia, som para festa em condomínio Bragança Paulista, iluminação cênica Extrema, DJ festa de aniversário, estrutura de som para casa em condomínio">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://festanocondominio.com.br/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://festanocondominio.com.br/">
+    <meta property="og:title" content="Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região">
+    <meta property="og:description" content="Experiência musical exclusiva, sonorização de alta fidelidade e estética clean para eventos na sua residência ou área gourmet.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Fix: dark mode aplicado ANTES do primeiro paint, sem flash -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <!-- Fix: preload da imagem hero (LCP) -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80" fetchpriority="high">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EntertainmentBusiness",
+      "name": "Festa no Condomínio — Produção & Entretenimento Musical",
+      "description": "Música ao vivo, DJ profissional, sonorização aveludada e iluminação cênica para aniversários e recepções privativas em condomínios de alto padrão.",
+      "url": "https://festanocondominio.com.br",
+      "telephone": "+5511948564577",
+      "priceRange": "$$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Bragança Paulista",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bragança Paulista" },
+        { "@type": "City", "name": "Atibaia" },
+        { "@type": "City", "name": "Extrema" },
+        { "@type": "City", "name": "Itatiba" }
+      ],
+      "knowsAbout": [
+        "Música ao Vivo para Aniversários",
+        "DJ Profissional para Eventos Residenciais",
+        "Sonorização para Áreas Gourmet e Varandas",
+        "Acústica Controlada para Condomínios Fechados",
+        "Iluminação Cênica Arquitetural"
+      ]
+    }
+    </script>
+
+    <!-- Fix: FAQPage schema (rich snippet no Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Vocês atendem em condomínios de Bragança, Atibaia e Extrema?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim! Nossa base fica na região, o que nos permite atender com total agilidade condomínios e residências em Bragança Paulista, Atibaia, Extrema, Itatiba e arredores — com facilidade logística e sem taxas de deslocamento da capital."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E as regras de barulho e portaria do meu condomínio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Trabalhamos com equipamentos de alta fidelidade e direcionamento acústico focado no seu ambiente. Isso garante um preenchimento musical agradável e envolvente sem espalhar ruído exagerado para a vizinhança. Além disso, enviamos previamente todos os dados da equipe para liberação na portaria."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como definimos o repertório da apresentação?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Alinhamos com antecedência o estilo musical desejado pelo anfitrião (tanto para a atração ao vivo quanto para o set de DJ), incluindo sugestões e músicas que não podem faltar, garantindo um ambiente sob medida para o seu evento."
+          }
+        }
+      ]
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -15,418 +107,675 @@
                     colors: {
                         champagne: '#D4B068',
                         champagneHover: '#C29D55',
+                        offwhite: '#FAF9F6',
                         darkEspresso: '#1C1814',
-                        darkCard: '#1A1511',
-                        darkBorder: '#382D24',
-                        bodyBg: '#0F0D0B',
-                        mutedText: '#A1A1AA'
+                        bodyText: '#3F3F46',
+                        mutedText: '#71717A',
+                        cardBg: '#FFFFFF',
+                        darkCardBg: '#1A1511',
+                        subtleBorder: '#E4E4E7',
+                        darkSubtleBorder: '#382D24'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0F0D0B; color: #FAF9F6; font-family: system-ui, -apple-system, sans-serif; }
-        .glow-champagne { box-shadow: 0 0 20px rgba(212, 176, 104, 0.15); }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #1A1511; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #382D24; border-radius: 4px; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #FAF9F6;
+            color: #1C1814;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        html.dark body {
+            background-color: #0F0D0B;
+            color: #FAF9F6;
+        }
+
+        @keyframes tideBreathing {
+            0%, 100% {
+                transform: translateY(0px);
+                border-color: rgba(212, 176, 104, 0.40);
+                box-shadow: 0 20px 45px rgba(28, 24, 20, 0.12), inset 0 0 12px rgba(212, 176, 104, 0.10);
+            }
+            50% {
+                transform: translateY(-2.5px);
+                border-color: rgba(212, 176, 104, 0.65);
+                box-shadow: 0 25px 55px rgba(212, 176, 104, 0.18), inset 0 0 20px rgba(212, 176, 104, 0.20);
+            }
+        }
+
+        @keyframes cardTide {
+            0%, 100% {
+                transform: translateY(0px);
+                border-color: rgba(228, 228, 231, 0.9);
+            }
+            50% {
+                transform: translateY(-2px);
+                border-color: rgba(212, 176, 104, 0.45);
+                box-shadow: 0 10px 25px rgba(212, 176, 104, 0.10);
+            }
+        }
+
+        @keyframes ctaChestGlow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 6px 18px rgba(212, 176, 104, 0.30);
+            }
+            50% {
+                transform: scale(1.015);
+                box-shadow: 0 10px 25px rgba(212, 176, 104, 0.55), 0 0 15px rgba(212, 176, 104, 0.35);
+            }
+        }
+
+        .hero-amber-overlay {
+            background: linear-gradient(135deg, rgba(250, 243, 230, 0.88) 0%, rgba(243, 232, 211, 0.82) 100%);
+            backdrop-filter: blur(16px) brightness(1.05);
+            -webkit-backdrop-filter: blur(16px) brightness(1.05);
+            animation: tideBreathing 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            border: 1px solid rgba(212, 176, 104, 0.4);
+        }
+
+        html.dark .hero-amber-overlay {
+            background: linear-gradient(135deg, rgba(28, 24, 20, 0.45) 0%, rgba(212, 176, 104, 0.20) 100%);
+            border: none;
+        }
+
+        .card-tide-1 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .card-tide-2 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.8s; }
+        .card-tide-3 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 3.6s; }
+
+        .cta-breathing {
+            animation: ctaChestGlow 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .penthouse-highlight {
+            border: 2px solid #D4B068;
+            box-shadow: 0 10px 30px rgba(212, 176, 104, 0.25);
+        }
+
+        .logo-ape-suave {
+            color: #D4B068;
+            text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.90);
+        }
+
+        html.dark .logo-ape-suave {
+            color: #D4B068;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.90);
+        }
+
+        /* Fix v1.2: efeito de brilho do menu suavizado (era uma caixa reta, agora é um glow difuso) */
+        .nav-link-sheen {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .nav-link-sheen::after {
+            content: '';
+            position: absolute;
+            top: -80%;
+            left: -160%;
+            width: 60%;
+            height: 260%;
+            background: linear-gradient(75deg,
+                rgba(212, 176, 104, 0) 0%,
+                rgba(212, 176, 104, 0.55) 45%,
+                rgba(212, 176, 104, 0.55) 55%,
+                rgba(212, 176, 104, 0) 100%);
+            filter: blur(6px);
+            transform: rotate(20deg);
+            pointer-events: none;
+        }
+
+        .nav-link-sheen:hover::after {
+            left: 160%;
+            transition: left 0.5s ease-in-out;
+        }
+
+        .hero-title-dark {
+            color: #1C1814;
+            text-shadow: 0px 1px 1.5px rgba(255, 255, 255, 0.70);
+        }
+
+        html.dark .hero-title-dark {
+            color: #F3E8D3;
+            text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.95);
+        }
+
+        .hero-support-text {
+            color: #2D2822;
+            text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.85);
+            font-weight: 700;
+        }
+
+        html.dark .hero-support-text {
+            color: #E2D9CC;
+            text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.90);
+            font-weight: 600;
+        }
+
+        .text-offwhite-to-champagne {
+            background: linear-gradient(135deg, #1C1814 0%, #4A3B24 40%, #D4B068 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+        }
+
+        html.dark .text-offwhite-to-champagne {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F5EBE0 30%, #D4B068 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 1px 2px rgba(28, 24, 20, 0.4));
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+            opacity: 0;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            opacity: 1;
+            padding-top: 0.875rem;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: #D4B068;
+        }
     </style>
 </head>
-<body class="min-h-screen p-6 antialiased custom-scrollbar">
+<body class="min-h-screen antialiased selection:bg-champagne selection:text-white overflow-x-hidden">
 
-    <!-- Header do Painel -->
-    <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 mb-8 border-b border-darkBorder gap-4">
-        <div>
-            <div class="flex items-center gap-3">
-                <span class="text-xs uppercase tracking-widest text-champagne bg-champagne/10 px-3 py-1 rounded-full border border-champagne/30">Intelligence Hub</span>
-                <span id="last-update" class="text-xs text-mutedText">• Carregando dados...</span>
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#FAF9F6]/60 dark:bg-[#0F0D0B]/60 backdrop-blur-xl border-b border-subtleBorder/80 dark:border-darkSubtleBorder/80">
+        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between" style="height: 69px;">
+            <a href="#" class="text-xl font-extrabold tracking-tight text-darkEspresso dark:text-offwhite uppercase">
+                Festa no <span class="logo-ape-suave font-bold text-2xl tracking-wide ml-0.5">Condomínio</span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-bold tracking-widest text-darkEspresso dark:text-offwhite uppercase">
+                <a href="#experiencia" class="nav-link-sheen hover:text-champagne transition-colors py-1">Diferenciais</a>
+                <a href="#ofertas" class="nav-link-sheen hover:text-champagne transition-colors py-1">Formatos</a>
+                <a href="#faq" class="nav-link-sheen hover:text-champagne transition-colors py-1">Dúvidas</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-4">
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
+                   target="_blank" rel="noopener"
+                   class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-6 py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing block">
+                    Consultar Data
+                </a>
             </div>
-            <h1 class="text-2xl font-extrabold tracking-tight mt-1 text-white">Painel de Performance & Live Tracking</h1>
-        </div>
-        <div class="flex items-center gap-3">
-            <!-- Filtro de Período Conectado -->
-            <div class="bg-darkCard border border-darkBorder text-xs text-mutedText font-semibold px-3 py-1.5 rounded-xl flex items-center gap-2 hover:border-champagne/50 transition">
-                <i data-lucide="calendar" class="w-4 h-4 text-champagne"></i>
-                <select id="period-filter" class="bg-transparent text-white font-semibold focus:outline-none cursor-pointer">
-                    <option value="7" class="bg-darkCard text-white">Últimos 7 dias</option>
-                    <option value="15" class="bg-darkCard text-white">Últimos 15 dias</option>
-                    <option value="30" selected class="bg-darkCard text-white">Últimos 30 dias</option>
-                    <option value="90" class="bg-darkCard text-white">Últimos 90 dias</option>
-                </select>
+
+            <div class="flex items-center gap-3 md:hidden">
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
+                   target="_blank" rel="noopener"
+                   class="bg-champagne hover:bg-champagneHover text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-sm flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                    <span>Consultar</span>
+                </a>
             </div>
-            <button onclick="carregarDashboard()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                <span>Atualizar</span>
-            </button>
         </div>
     </header>
 
-    <!-- Top Cards: Métricas Financeiras Principais -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        
-        <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
-            <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Faturamento Estimado</span>
-                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="dollar-sign" class="w-5 h-5"></i></span>
-            </div>
-            <p id="card-faturamento" class="text-3xl font-extrabold text-white mt-3">R$ 0<span class="text-sm font-normal text-mutedText">,00</span></p>
-            <div class="flex items-center gap-1 text-emerald-400 text-xs mt-3 font-medium">
-                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-                <span id="card-conversoes-qtd">0 intenções de reserva</span>
-            </div>
+    <section class="relative w-full min-h-[85vh] flex items-center justify-center pt-28 pb-16 overflow-hidden border-b border-subtleBorder dark:border-darkSubtleBorder bg-darkEspresso">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80"
+                 alt="Música ao vivo e DJ tocando em festa de condomínio de alto padrão em Bragança Paulista"
+                 width="2000" height="1333"
+                 fetchpriority="high"
+                 class="w-full h-full object-cover object-center brightness-100 contrast-95">
+            <div class="absolute inset-0 bg-gradient-to-b from-darkEspresso/30 via-amber-950/20 to-darkEspresso/40"></div>
         </div>
 
-        <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
-            <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Total de Visitas</span>
-                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="users" class="w-5 h-5"></i></span>
-            </div>
-            <p id="card-visitas" class="text-3xl font-extrabold text-white mt-3">0</p>
-            <div class="flex items-center gap-1 text-champagne text-xs mt-3 font-medium">
-                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                <span>Sessões capturadas via tracker</span>
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center my-auto">
+            <div class="hero-amber-overlay p-8 sm:p-12 rounded-3xl shadow-xl">
+                <span class="inline-block text-[11px] font-extrabold tracking-[0.22em] text-amber-900 dark:text-champagne uppercase mb-4 px-4 py-1.5 rounded-full bg-champagne/30 border border-champagne/50">
+                    Bragança Paulista • Atibaia • Extrema & Região
+                </span>
+
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.18] mb-6">
+                    <span class="hero-title-dark">Música ao Vivo &amp; DJ para a Área Gourmet</span> <br>
+                    <span class="text-offwhite-to-champagne font-extrabold inline-block mt-1">
+                        do Seu Condomínio.
+                    </span>
+                </h1>
+
+                <p class="hero-support-text text-base sm:text-lg leading-relaxed max-w-2xl mx-auto mb-2 text-center">
+                    A combinação perfeita entre apresentação ao vivo e curadoria de DJ para receber convidados com elegância na sua residência. Som de alta fidelidade, estética clean sem fiação exposta e estritamente no volume ideal do seu espaço.
+                </p>
             </div>
         </div>
+    </section>
 
-        <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
-            <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">ROAS (Estimativa Mídia)</span>
-                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="zap" class="w-5 h-5"></i></span>
-            </div>
-            <p id="card-roas" class="text-3xl font-extrabold text-champagne mt-3">--</p>
-            <div class="flex items-center gap-1 text-mutedText text-xs mt-3">
-                <span id="card-roas-text">R$ 1.500 investidos → Retorno Mídia</span>
-            </div>
-        </div>
+    <main class="max-w-5xl mx-auto px-6 py-16 space-y-20">
 
-        <div class="bg-darkCard border border-darkBorder p-5 rounded-2xl relative overflow-hidden">
-            <div class="flex justify-between items-start">
-                <span class="text-xs font-semibold text-mutedText uppercase tracking-wider">Ticket Médio</span>
-                <span class="p-2 bg-champagne/10 rounded-lg text-champagne"><i data-lucide="award" class="w-5 h-5"></i></span>
+        <section id="experiencia">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Engenharia Sonora &amp; Cênica
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Feito sob medida para condomínios fechados</h2>
             </div>
-            <p id="card-ticket" class="text-3xl font-extrabold text-white mt-3">R$ 0<span class="text-sm font-normal text-mutedText">,00</span></p>
-            <div class="flex items-center gap-1 text-champagne text-xs mt-3 font-medium">
-                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                <span id="card-estate-percent">0% Estate Session</span>
-            </div>
-        </div>
 
-    </div>
-
-    <!-- Grid Principal: Gráficos + Live Tracking de Visita por IP -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        
-        <!-- Coluna Esquerda/Centro: Performance de Conversão e Cidades -->
-        <div class="lg:col-span-2 space-y-8">
-            
-            <!-- Gráfico Funil & Vendas -->
-            <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-white">Funil de Atração & Conversão WhatsApp</h3>
-                        <p class="text-xs text-mutedText">Jornada dos visitantes até o clique final de reserva</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-1 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="volume-2" class="w-6 h-6"></i>
                     </div>
-                    <span id="taxa-global-badge" class="text-xs bg-darkBorder text-champagne px-3 py-1 rounded-lg font-mono">Taxa Global: 0.0%</span>
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Acústica Cristalina</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Preenchimento homogêneo no ambiente com som aveludado, sem precisar de volume agressivo que gere problemas com a vizinhança.
+                    </p>
                 </div>
-                <div class="h-64">
-                    <canvas id="conversionChart"></canvas>
-                </div>
-            </div>
 
-            <!-- Divisão por Regiões / Cidades e Pacotes -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- Mapa de Origem por Cidade Dinâmico -->
-                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-champagne"></i>
-                        Demandas por Região
-                    </h3>
-                    <div id="cities-container" class="space-y-3.5 text-xs">
-                        <p class="text-mutedText">Carregando regiões...</p>
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-2 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
                     </div>
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Iluminação Arquitetural</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Luz cênica projetada para valorizar a arquitetura e o paisagismo da sua área gourmet, varanda ou deck de piscina.
+                    </p>
                 </div>
 
-                <!-- Preferência de Formatos -->
-                <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <i data-lucide="music" class="w-4 h-4 text-champagne"></i>
-                        Formatos Mais Consultados
-                    </h3>
-                    <div class="h-44 flex items-center justify-center">
-                        <canvas id="packagesChart"></canvas>
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-7 text-center card-tide-3 hover:border-champagne/60 transition-all duration-300 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-champagne/15 flex items-center justify-center mx-auto mb-5 text-champagne">
+                        <i data-lucide="eye-off" class="w-6 h-6"></i>
                     </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Coluna Direita: RASTREADOR EM TEMPO REAL POR IP -->
-        <div class="bg-darkCard border border-darkBorder p-6 rounded-2xl flex flex-col justify-between">
-            <div>
-                <div class="flex items-center justify-between pb-4 mb-4 border-b border-darkBorder">
-                    <div class="flex items-center gap-2">
-                        <span class="relative flex h-3 w-3">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                        </span>
-                        <h3 class="text-sm font-extrabold text-white uppercase tracking-wider">Live Feed (Sessões)</h3>
-                    </div>
-                    <span class="text-[10px] text-mutedText bg-darkBorder px-2.5 py-1 rounded-full font-mono">Tracking por IP</span>
-                </div>
-
-                <!-- Feed de Atividades por Usuário Conectado ao Supabase -->
-                <div id="live-feed-container" class="space-y-4 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
-                    <p class="text-xs text-mutedText">Buscando últimas sessões...</p>
-                </div>
-            </div>
-
-            <!-- Dica de Neuromarketing no Rodapé -->
-            <div class="mt-4 pt-4 border-t border-darkBorder">
-                <div class="p-3 bg-champagne/10 border border-champagne/20 rounded-xl flex items-start gap-2.5">
-                    <i data-lucide="lightbulb" class="w-4 h-4 text-champagne shrink-0 mt-0.5"></i>
-                    <p class="text-[11px] text-amber-200/90 leading-snug">
-                        <strong>Insight em Tempo Real:</strong> Acompanhe a origem e o interesse dos clientes em tempo real para um atendimento via WhatsApp mais personalizado!
+                    <h3 class="text-lg font-bold text-darkEspresso dark:text-offwhite mb-2">Estética Clean &amp; Discreta</h3>
+                    <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed text-center">
+                        Equipamentos compactos de altíssima fidelidade, montagem organizada e cabeamento oculto sem poluição visual no ambiente.
                     </p>
                 </div>
             </div>
+        </section>
 
+        <section id="ofertas">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Formatos Práticos &amp; Exclusivos
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Escolha a experiência ideal para sua residência</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-3xl p-7 flex flex-col justify-between shadow-sm card-tide-1">
+                    <div>
+                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80"
+                                 alt="Pocket Session - DJ e música ao vivo para área gourmet e varandas"
+                                 width="800" height="533" loading="lazy" decoding="async"
+                                 class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite">Pocket Session</h3>
+                            <span class="text-[10px] font-extrabold text-amber-800 dark:text-champagne bg-champagne/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Áreas Gourmet &amp; Varandas
+                            </span>
+                        </div>
+
+                        <p class="text-xs font-bold text-champagne uppercase tracking-widest mb-3">Recepções &amp; Encontros Intimistas</p>
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold mb-6 leading-relaxed text-left">
+                            A atração perfeita para acolher convidados em almoços, jantares e celebrações na sua área gourmet.
+                        </p>
+
+                        <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
+                            <span class="text-[11px] font-extrabold text-mutedText dark:text-champagne/80 uppercase tracking-wider block mb-3">Escolha o formato do seu evento:</span>
+                            <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold text-left">
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Opção A:</strong> Música ao Vivo (Voz &amp; Violão Solo) — <strong class="font-bold">2h00 de apresentação</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Opção B:</strong> DJ Set com Curadoria Exclusiva — <strong class="font-bold">3h00 de performance</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Sonorização Estéreo:</strong> 2 Caixas de som compactas HD Electro-Voice com fiação oculta.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Luz de Destaque:</strong> Iluminação cênica de ponto focada.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Logística Regional:</strong> Montagem e transporte inclusos para Bragança e região.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-5 border-t border-subtleBorder dark:border-darkSubtleBorder">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
+                            <span class="text-lg font-extrabold text-darkEspresso dark:text-champagne">R$ 1.290,00</span>
+                        </div>
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20reservar%20a%20Pocket%20Session%20(R$%201.290)."
+                           target="_blank" rel="noopener"
+                           class="w-full block text-center bg-zinc-100 dark:bg-[#2A221B] hover:bg-zinc-200 dark:hover:bg-[#382E25] text-darkEspresso dark:text-offwhite text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200">
+                            Reservar Pocket Session
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-cardBg dark:bg-darkCardBg rounded-3xl p-7 flex flex-col justify-between penthouse-highlight card-tide-2 relative">
+                    <div class="absolute -top-3 right-6 bg-champagne text-white text-[10px] font-extrabold tracking-widest uppercase px-3.5 py-1 rounded-full shadow-md z-10">
+                        MAIS ESCOLHIDO
+                    </div>
+
+                    <div>
+                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
+                            <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80"
+                                 alt="Estate Session - projeto cênico completo com moving heads para deck e jardins"
+                                 width="800" height="533" loading="lazy" decoding="async"
+                                 class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite">Estate Session</h3>
+                            <span class="text-[10px] font-extrabold text-amber-800 dark:text-champagne bg-champagne/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Deck, Jardins &amp; Áreas Abertas
+                            </span>
+                        </div>
+
+                        <p class="text-xs font-bold text-champagne uppercase tracking-widest mb-3">Formato Estendido &amp; Experiência Cênica</p>
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold mb-6 leading-relaxed text-left">
+                            Formato estendido com sonorização ampliada e projeto de iluminação que valoriza a noite na sua casa.
+                        </p>
+
+                        <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
+                            <span class="text-[11px] font-extrabold text-mutedText dark:text-champagne/80 uppercase tracking-wider block mb-3">Escolha o formato do seu evento:</span>
+                            <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold text-left">
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Opção A:</strong> Música ao Vivo (Voz &amp; Violão Solo) — <strong class="font-bold">3h00 de apresentação</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Opção B:</strong> DJ Set com Curadoria Exclusiva — <strong class="font-bold">4h00 de performance</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Sonorização Dupla:</strong> 2 Sistemas de som HD em estéreo com cobertura acústica ampliada.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Projeto Cênico Completo:</strong> Moving Heads dinâmicos + Leds de iluminação de ambiente.</span>
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
+                                    <span><strong>Tempo Estendido:</strong> +1 hora de atração para curtir a noite sem pressa.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="pt-5 border-t border-subtleBorder dark:border-darkSubtleBorder">
+                        <div class="flex items-baseline justify-between mb-4">
+                            <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
+                            <span class="text-lg font-extrabold text-champagne">R$ 1.990,00</span>
+                        </div>
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20escolher%20a%20Estate%20Session%20(R$%201.990)."
+                           target="_blank" rel="noopener"
+                           class="w-full block text-center bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing">
+                            Escolher Estate Session
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-6 sm:p-8 rounded-3xl text-center max-w-2xl mx-auto shadow-sm">
+                <h4 class="text-base font-bold text-darkEspresso dark:text-offwhite mb-2">Procura um formato personalizado ou mais de uma atração?</h4>
+                <p class="text-xs sm:text-sm text-bodyText dark:text-[#D1C7BD] font-medium mb-4">
+                    Trabalhamos também com formação em Duo (Voz &amp; Violão Dupla), combinações de Música ao Vivo + DJ no mesmo evento e prazos estendidos.
+                </p>
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20formatos%20especiais%20(Duo/Combo%20M%C3%BAsica%20+%20DJ)."
+                   target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 text-champagne hover:text-champagneHover text-xs font-extrabold uppercase tracking-wider underline underline-offset-4 transition-colors">
+                    <span>Consultar Opções Especiais no WhatsApp</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+
+        <section id="faq" class="pt-4">
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="text-[11px] font-extrabold tracking-[0.2em] text-amber-800 dark:text-champagne uppercase block mb-3">
+                    Dúvidas Frequentes
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-darkEspresso dark:text-offwhite">Respostas Práticas &amp; Soluções</h2>
+            </div>
+
+            <div class="space-y-3.5 max-w-3xl mx-auto">
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-1">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">01.</span>
+                            Vocês atendem em condomínios de Bragança, Atibaia e Extrema?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Sim! Nossa base fica na região, o que nos permite atender com total agilidade condomínios e residências em Bragança Paulista, Atibaia, Extrema, Itatiba e arredores — com facilidade logística e sem taxas de deslocamento da capital.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-2">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">02.</span>
+                            E as regras de barulho e portaria do meu condomínio?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Trabalhamos com equipamentos de alta fidelidade e direcionamento acústico focado no seu ambiente. Isso garante um preenchimento musical agradável e envolvente sem espalhar ruído exagerado para a vizinhança. Além disso, enviamos previamente todos os dados da equipe para liberação na portaria.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-5 sm:p-6 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm card-tide-3">
+                    <div class="faq-header flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-darkEspresso dark:text-offwhite flex items-center gap-2.5">
+                            <span class="text-champagne font-mono text-xs sm:text-sm">03.</span>
+                            Como definimos o repertório da apresentação?
+                        </h3>
+                        <i data-lucide="chevron-down" class="faq-icon w-5 h-5 text-mutedText transition-transform duration-300 shrink-0"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
+                            Alinhamos com antecedência o estilo musical desejado pelo anfitrião (tanto para a atração ao vivo quanto para o set de DJ), incluindo sugestões e músicas que não podem faltar, garantindo um ambiente sob medida para o seu evento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center pt-8 pb-4">
+            <div class="max-w-xl mx-auto bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-8 rounded-3xl shadow-sm">
+                <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite mb-3">Pronto para organizar seu próximo evento no condomínio?</h3>
+                <p class="text-sm text-bodyText dark:text-[#D1C7BD] font-medium mb-6">Consulte a disponibilidade da sua data com atendimento rápido no WhatsApp.</p>
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20disponibilidade."
+                   target="_blank" rel="noopener"
+                   class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-8 py-4 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing inline-block">
+                    Consultar Data no WhatsApp
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-cardBg dark:bg-darkCardBg border-t border-subtleBorder dark:border-darkSubtleBorder py-8 text-center text-xs text-mutedText font-medium">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="font-medium">Festa no Condomínio — festanocondominio.com.br</p>
+            <p>© copyright festanocondominio. todos os direitos reservados.</p>
         </div>
+    </footer>
 
-    </div>
-
-    <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
     <script>
-        // ⚙️ CONFIGURAÇÃO DO SUPABASE
-    
-const SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
-
-        let conversionChartInstance = null;
-        let packagesChartInstance = null;
-
         document.addEventListener("DOMContentLoaded", () => {
-            lucide.createIcons();
-            carregarDashboard();
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
 
-            // Event Listener do Filtro de Dias
-            document.getElementById('period-filter').addEventListener('change', () => {
-                carregarDashboard();
+            // Accordion do FAQ
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
             });
         });
-
-        async function carregarDashboard() {
-            const dias = parseInt(document.getElementById('period-filter').value) || 30;
-            
-            const dataLimite = new Date();
-            dataLimite.setDate(dataLimite.getDate() - dias);
-            const isoDate = dataLimite.toISOString();
-
-            document.getElementById('last-update').innerText = `• Atualizado agora (${dias}d)`;
-
-            try {
-                // 1. Busca Sessões Reais
-                const resSessions = await fetch(`${SUPABASE_URL}/rest/v1/con_sessions?created_at=gte.${isoDate}&order=created_at.desc`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                const sessions = await resSessions.json();
-
-                // 2. Busca Conversões Reais
-                const resConversions = await fetch(`${SUPABASE_URL}/rest/v1/con_conversion_events?created_at=gte.${isoDate}&order=created_at.desc`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                const conversions = await resConversions.json();
-
-                // 3. Processa e Atualiza os Cards
-                atualizarCards(sessions, conversions);
-                
-                // 4. Renderiza Cidades e Live Feed
-                renderizarCidades(sessions);
-                renderizarLiveFeed(sessions, conversions);
-
-                // 5. Atualiza os Gráficos
-                renderizarGraficoFunil(sessions, conversions);
-                renderizarGraficoPacotes(conversions);
-
-            } catch (err) {
-                console.error("Erro ao carregar dados do Supabase:", err);
-            }
-        }
-
-        function atualizarCards(sessions, conversions) {
-            const totalVisitas = sessions.length;
-            const totalConversoes = conversions.length;
-
-            const faturamento = conversions.reduce((sum, c) => sum + Number(c.estimated_value || 0), 0);
-            const ticketMedio = totalConversoes > 0 ? (faturamento / totalConversoes) : 0;
-            const taxaGlobal = totalVisitas > 0 ? ((totalConversoes / totalVisitas) * 100).toFixed(1) : 0;
-
-            const estateConversoes = conversions.filter(c => (c.package_name || '').toLowerCase().includes('estate')).length;
-            const percentEstate = totalConversoes > 0 ? Math.round((estateConversoes / totalConversoes) * 100) : 0;
-
-            document.getElementById('card-faturamento').innerHTML = `R$ ${faturamento.toLocaleString('pt-BR')}<span class="text-sm font-normal text-mutedText">,00</span>`;
-            document.getElementById('card-conversoes-qtd').innerText = `${totalConversoes} cliques no WhatsApp`;
-            document.getElementById('card-visitas').innerText = totalVisitas.toLocaleString('pt-BR');
-            document.getElementById('card-ticket').innerHTML = `R$ ${ticketMedio.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('card-estate-percent').innerText = `${percentEstate}% Estate Session`;
-            document.getElementById('taxa-global-badge').innerText = `Taxa Global: ${taxaGlobal}%`;
-
-            // ROAS Estimado baseado em investimento base de R$ 1.500
-            const roas = faturamento > 0 ? (faturamento / 1500).toFixed(1) + 'x' : '0.0x';
-            document.getElementById('card-roas').innerText = roas;
-            document.getElementById('card-roas-text').innerText = `R$ 1.500 investidos → R$ ${faturamento.toLocaleString('pt-BR')} gerados`;
-        }
-
-        function renderizarCidades(sessions) {
-            const cityCounts = {};
-            sessions.forEach(s => {
-                const city = s.city && s.city !== 'Desconhecido' ? s.city : 'Outras Regiões';
-                cityCounts[city] = (cityCounts[city] || 0) + 1;
-            });
-
-            const sortedCities = Object.entries(cityCounts)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 4);
-
-            const total = sessions.length || 1;
-            const container = document.getElementById('cities-container');
-            container.innerHTML = '';
-
-            if (sortedCities.length === 0) {
-                container.innerHTML = '<p class="text-mutedText">Nenhuma visita registrada no período.</p>';
-                return;
-            }
-
-            sortedCities.forEach(([city, count]) => {
-                const percent = Math.round((count / total) * 100);
-                container.innerHTML += `
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="font-semibold text-white">${city}</span>
-                            <span class="text-champagne font-mono font-bold">${percent}% (${count} acessos)</span>
-                        </div>
-                        <div class="w-full bg-darkBorder h-2 rounded-full overflow-hidden">
-                            <div class="bg-champagne h-full rounded-full" style="width: ${percent}%"></div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function renderizarLiveFeed(sessions, conversions) {
-            const container = document.getElementById('live-feed-container');
-            container.innerHTML = '';
-
-            const convertedSessionIds = new Set(conversions.map(c => c.session_id));
-            const recentSessions = sessions.slice(0, 5);
-
-            if (recentSessions.length === 0) {
-                container.innerHTML = '<p class="text-xs text-mutedText">Nenhuma sessão recente registrada.</p>';
-                return;
-            }
-
-            recentSessions.forEach(s => {
-                const converted = convertedSessionIds.has(s.id);
-                const city = s.city || 'Origem Direta';
-                const device = s.device || 'Desktop';
-                const source = s.source || 'Direto';
-                const ip = s.ip_address ? s.ip_address.substring(0, 10) + '.XX' : '189.XX.XX.XX';
-
-                const statusTag = converted 
-                    ? '<span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded">No WhatsApp</span>'
-                    : '<span class="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Navegando</span>';
-
-                const borderColor = converted ? 'border-champagne/40' : 'border-darkBorder';
-
-                container.innerHTML += `
-                    <div class="p-3.5 bg-bodyBg border ${borderColor} rounded-xl">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <span class="text-xs font-bold ${converted ? 'text-champagne' : 'text-white'} flex items-center gap-1.5">
-                                <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                                IP: ${ip} (${city})
-                            </span>
-                            ${statusTag}
-                        </div>
-                        <p class="text-[11px] text-mutedText mb-2">Dispositivo: ${device} • Origem: ${source}</p>
-                        <div class="bg-darkCard p-2 rounded border border-darkBorder text-[11px] space-y-1 font-mono text-zinc-300">
-                            <p class="text-amber-300">1. Acessou: ${s.page_path || '/'}</p>
-                            ${converted ? '<p class="text-emerald-400 font-bold">2. Clicou no Botão WhatsApp</p>' : '<p>2. Navegando na página...</p>'}
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function renderizarGraficoFunil(sessions, conversions) {
-            const ctx = document.getElementById('conversionChart').getContext('2d');
-            if (conversionChartInstance) conversionChartInstance.destroy();
-
-            conversionChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Período Atual'],
-                    datasets: [{
-                        label: 'Visitantes Totais',
-                        data: [sessions.length],
-                        borderColor: '#71717A',
-                        backgroundColor: 'transparent',
-                        tension: 0.4
-                    }, {
-                        label: 'Cliques no WhatsApp',
-                        data: [conversions.length],
-                        borderColor: '#D4B068',
-                        backgroundColor: 'rgba(212, 176, 104, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#A1A1AA', font: { size: 11 } } } },
-                    scales: {
-                        x: { grid: { color: '#382D24' }, ticks: { color: '#A1A1AA' } },
-                        y: { grid: { color: '#382D24' }, ticks: { color: '#A1A1AA' } }
-                    }
-                }
-            });
-        }
-
-        function renderizarGraficoPacotes(conversions) {
-            const ctx = document.getElementById('packagesChart').getContext('2d');
-            if (packagesChartInstance) packagesChartInstance.destroy();
-
-            let estateCount = 0;
-            let pocketCount = 0;
-            let outrosCount = 0;
-
-            conversions.forEach(c => {
-                const pkg = (c.package_name || '').toLowerCase();
-                if (pkg.includes('estate')) estateCount++;
-                else if (pkg.includes('pocket')) pocketCount++;
-                else outrosCount++;
-            });
-
-            packagesChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Estate Session', 'Pocket Session', 'Outros/Geral'],
-                    datasets: [{
-                        data: [estateCount || 1, pocketCount, outrosCount],
-                        backgroundColor: ['#D4B068', '#C29D55', '#382D24'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { color: '#A1A1AA', font: { size: 10 } } } }
-                }
-            });
-        }
     </script>
+
+    <!-- Analytics: IDs placeholder, ativar quando disponíveis (mesmo padrão do 432up.com) -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-XXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GTM-XXXXXXX');
+    </script>
+    <script>
+      !function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'SEU_PIXEL_ID');
+      fbq('track', 'PageView');
+    </script>
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){...})(window, document, "clarity", "script", "SEU_CLARITY_ID");
+    </script>
+    -->
+
+    <!-- Tracking de visitas e conversões (Supabase direto, sem passar por Worker) -->
+    <script>
+    (function() {
+        'use strict';
+
+        var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
+        var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+
+        function isBot() {
+            var ua = navigator.userAgent.toLowerCase();
+            var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
+            return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
+        }
+        if (isBot()) return;
+
+        function getSessionId() {
+            var sid = sessionStorage.getItem('con_session_id');
+            if (!sid) {
+                sid = 'con_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
+                sessionStorage.setItem('con_session_id', sid);
+            }
+            return sid;
+        }
+        var sessionId = getSessionId();
+
+        // Envia dados via fetch com keepalive:true (sobrevive à navegação de página,
+        // funciona pro clique que leva a outro site como o WhatsApp).
+        // OBS: sendBeacon NÃO é usado aqui porque não permite enviar os headers
+        // 'apikey' e 'Authorization' que o Supabase exige — o insert falhava
+        // silenciosamente com sendBeacon.
+        function send(table, payload) {
+            var url = SUPABASE_URL + '/rest/v1/' + table;
+            fetch(url, {
+                method: 'POST',
+                keepalive: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify(payload)
+            }).then(function(res) {
+                if (!res.ok) {
+                    res.text().then(function(t) { console.warn('[tracking] Falha', table, res.status, t); });
+                }
+            }).catch(function(e) { console.warn('[tracking] erro de rede:', e); });
+        }
+
+        function getSourceInfo() {
+            var params = new URLSearchParams(window.location.search);
+            return {
+                source: params.get('utm_source') || 'direct',
+                medium: params.get('utm_medium') || 'none',
+                campaign: params.get('utm_campaign') || 'none',
+                referrer: document.referrer || 'direct'
+            };
+        }
+
+        // 1) Registra a visita assim que a página carrega
+        var src = getSourceInfo();
+        send('con_sessions', {
+            id: sessionId,
+            city: 'Bragança Paulista',
+            region: 'SP',
+            is_bot: false,
+            source: src.source,
+            medium: src.medium,
+            campaign: src.campaign,
+            referrer: src.referrer,
+            device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+            browser: navigator.userAgent,
+            page_path: window.location.pathname
+        });
+
+        // GeoIP opcional, não bloqueia nada
+        var controller = new AbortController();
+        var t = setTimeout(function(){ controller.abort(); }, 1000);
+        fetch('https://ipapi.co/json/', { signal: controller.signal })
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(data){
+                clearTimeout(t);
+                if (data && data.city) {
+                    send('con_sessions', { id: sessionId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' });
+                }
+            })
+            .catch(function(){});
+
+        // 2) Clique em qualquer botão de WhatsApp, em qualquer lugar da página,
+        //    mesmo que o botão seja criado depois deste script rodar.
+        document.addEventListener('click', function(event) {
+            var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
+            if (!link) return;
+
+            var href = (link.getAttribute('href') || '').toLowerCase();
+            var packageName = 'Consulta Geral';
+            var value = 0;
+            if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1) {
+                packageName = 'Pocket Session'; value = 1290.00;
+            } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1) {
+                packageName = 'Estate Session'; value = 1990.00;
+            }
+
+            send('con_conversion_events', {
+                session_id: sessionId,
+                package_name: packageName,
+                estimated_value: value
+            });
+        }, true);
+
+    })();
+    </script>
+
 </body>
 </html>
