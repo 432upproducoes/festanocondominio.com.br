@@ -685,166 +685,160 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
 
 
 
-    <!-- Tracking de visitas, tempo de permanência e conversões (Supabase direto) -->
-    <script>
-    ;(function() {
-        'use strict';
+   <!-- Tracking de visitas, tempo de permanência e conversões (Solução Definitiva: Pageview Único) -->
+<script>
+;(function() {
+    'use strict';
 
-        var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
-        var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
+    var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
+    var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
-        function isBot() {
-            var ua = navigator.userAgent.toLowerCase();
-            var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
-            return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
-        }
-        if (isBot()) return;
+    function isBot() {
+        var ua = navigator.userAgent.toLowerCase();
+        var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse'];
+        return bots.some(function(k){ return ua.indexOf(k) > -1; }) || !!navigator.webdriver;
+    }
+    if (isBot()) return;
 
-        // Usa localStorage com expiração de 30 minutos de inatividade para novas visitas limpas
-        function getSessionId() {
-            var sessionKey = 'con_session_data';
-            var now = Date.now();
-            var thirtyMinutes = 30 * 60 * 1000;
-            
-            try {
-                var stored = JSON.parse(localStorage.getItem(sessionKey));
-                if (stored && stored.id && (now - stored.timestamp < thirtyMinutes)) {
-                    stored.timestamp = now; // Atualiza o tempo da sessão ativa
-                    localStorage.setItem(sessionKey, JSON.stringify(stored));
-                    return stored.id;
-                }
-            } catch(e) {}
+    // Gera um ID totalmente novo a cada carregamento de página (F5 ou nova navegação), 
+    // garantindo que a aba normal se comporte exatamente como a anônima (INSERT limpo).
+    var visitId = 'vis_' + Math.random().toString(36).slice(2, 15) + Date.now().toString(36);
+    var startTime = Date.now();
+    var sessionSent = false;
 
-            var newId = 'con_' + Math.random().toString(36).slice(2, 15) + now.toString(36);
-            try {
-                localStorage.setItem(sessionKey, JSON.stringify({ id: newId, timestamp: now }));
-            } catch(e) {}
-            return newId;
-        }
-
-        var sessionId = getSessionId();
-        var startTime = Date.now();
-        var sessionSent = false;
-
-        function send(table, payload, useBeacon) {
-            var url = SUPABASE_URL + '/rest/v1/' + table;
-            
-            // Se for encerramento de página, usamos sendBeacon para garantir envio
-            if (useBeacon && navigator.sendBeacon) {
-                var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-                // Adicionamos headers via fetch customizado se não for beacon, mas para beacon o Supabase REST exigeapikey na URL ou headers simulados (o Supabase aceita apiKey via query param ?apikey=...)
-                var beaconUrl = url + '?apikey=' + SUPABASE_KEY;
-                navigator.sendBeacon(beaconUrl, blob);
-                return;
-            }
-
-            fetch(url, {
-                method: 'POST',
-                keepalive: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': 'Bearer ' + SUPABASE_KEY,
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify(payload)
-            }).catch(function(e) { console.warn('[tracking] erro:', e); });
-        }
-
-        function getSourceInfo() {
-            var params = new URLSearchParams(window.location.search);
-            return {
-                source: params.get('utm_source') || 'direct',
-                medium: params.get('utm_medium') || 'none',
-                campaign: params.get('utm_campaign') || 'none',
-                referrer: document.referrer || 'direct'
-            };
-        }
-
-        var src = getSourceInfo();
+    function send(table, payload, useBeacon) {
+        var url = SUPABASE_URL + '/rest/v1/' + table;
         
-        // Dispara o registro inicial da sessão (ou atualiza na tabela caso use UPSERT no Supabase)
-        send('con_sessions', {
-            id: sessionId,
-            city: 'Bragança Paulista',
-            region: 'SP',
-            is_bot: false,
-            source: src.source,
-            medium: src.medium,
-            campaign: src.campaign,
-            referrer: src.referrer,
-            device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-            browser: navigator.userAgent,
-            page_path: window.location.pathname,
-            duration_seconds: 0
-        }, false);
-
-        // Geolocalização por IP rápida
-        var controller = new AbortController();
-        var t = setTimeout(function(){ controller.abort(); }, 1000);
-        fetch('https://ipapi.co/json/', { signal: controller.signal })
-            .then(function(r){ return r.ok ? r.json() : null; })
-            .then(function(data){
-                clearTimeout(t);
-                if (data && data.city) {
-                    send('con_sessions', { id: sessionId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' }, false);
-                }
-            })
-            .catch(function(){});
-
-        // Função para calcular e atualizar o tempo de permanência total
-        function updateDuration(isClosing) {
-            if (sessionSent) return;
-            var duration = Math.round((Date.now() - startTime) / 1000);
-            
-            // Envia o tempo total de permanência acumulado
-            send('con_sessions', {
-                id: sessionId,
-                duration_seconds: duration
-            }, isClosing);
-
-            if (isClosing) sessionSent = true;
+        if (useBeacon && navigator.sendBeacon) {
+            var beaconUrl = url + '?apikey=' + SUPABASE_KEY;
+            var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+            navigator.sendBeacon(beaconUrl, blob);
+            return;
         }
 
-        // Atualiza o tempo periodicamente a cada 15 segundos caso o usuário continue na página
-        setInterval(function() {
-            updateDuration(false);
-        }, 15000);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload)
+        }).catch(function(e) { console.warn('[tracking] erro:', e); });
+    }
 
-        // Captura saída da página (fechamento de aba, troca de URL)
-        window.addEventListener('beforeunload', function() {
+    function getSourceInfo() {
+        var params = new URLSearchParams(window.location.search);
+        return {
+            source: params.get('utm_source') || 'direct',
+            medium: params.get('utm_medium') || 'none',
+            campaign: params.get('utm_campaign') || 'none',
+            referrer: document.referrer || 'direct'
+        };
+    }
+
+    var src = getSourceInfo();
+    
+    // Registro inicial da visita (Sempre um INSERT novo e limpo)
+    send('con_sessions', {
+        id: visitId,
+        city: 'Bragança Paulista',
+        region: 'SP',
+        is_bot: false,
+        source: src.source,
+        medium: src.medium,
+        campaign: src.campaign,
+        referrer: src.referrer,
+        device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        browser: navigator.userAgent,
+        page_path: window.location.pathname,
+        duration_seconds: 0
+    }, false);
+
+    // Geolocalização por IP rápida
+    var controller = new AbortController();
+    var t = setTimeout(function(){ controller.abort(); }, 1000);
+    fetch('https://ipapi.co/json/', { signal: controller.signal })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(data){
+            clearTimeout(t);
+            if (data && data.city) {
+                send('con_sessions', { id: visitId, city: data.city, region: data.region || 'SP', ip_address: data.ip || '' }, false);
+            }
+        })
+        .catch(function(){});
+
+    // Atualização do tempo de permanência acumulado
+    function updateDuration(isClosing) {
+        if (sessionSent) return;
+        var duration = Math.round((Date.now() - startTime) / 1000);
+        
+        // Envia via PATCH para atualizar apenas a duração desta visita específica
+        var url = SUPABASE_URL + '/rest/v1/con_sessions?id=eq.' + visitId;
+        var payload = { duration_seconds: duration };
+
+        if (isClosing && navigator.sendBeacon) {
+            var beaconUrl = url + '&apikey=' + SUPABASE_KEY;
+            var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+            navigator.sendBeacon(beaconUrl, blob);
+            sessionSent = true;
+            return;
+        }
+
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_KEY,
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(payload)
+        }).catch(function(e) { console.warn('[tracking duration] erro:', e); });
+
+        if (isClosing) sessionSent = true;
+    }
+
+    // Atualiza o tempo periodicamente a cada 15 segundos
+    setInterval(function() {
+        updateDuration(false);
+    }, 15000);
+
+    // Captura saída da página
+    window.addEventListener('beforeunload', function() {
+        updateDuration(true);
+    });
+
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
             updateDuration(true);
-        });
+        }
+    });
 
-        document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'hidden') {
-                updateDuration(true);
-            }
-        });
+    // Rastreamento de cliques em botões de conversão (WhatsApp) vinculado ao visitId correto
+    document.addEventListener('click', function(event) {
+        var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
+        if (!link) return;
 
-        // Rastreamento de cliques em botões de conversão (WhatsApp)
-        document.addEventListener('click', function(event) {
-            var link = event.target.closest ? event.target.closest('a[href*="wa.me"]') : null;
-            if (!link) return;
+        var href = (link.getAttribute('href') || '').toLowerCase();
+        var packageName = 'Consulta Geral';
+        var value = 0;
+        if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1) {
+            packageName = 'Pocket Session'; value = 1290.00;
+        } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1) {
+            packageName = 'Estate Session'; value = 1990.00;
+        }
 
-            var href = (link.getAttribute('href') || '').toLowerCase();
-            var packageName = 'Consulta Geral';
-            var value = 0;
-            if (href.indexOf('1.290') > -1 || href.indexOf('pocket') > -1) {
-                packageName = 'Pocket Session'; value = 1290.00;
-            } else if (href.indexOf('1.990') > -1 || href.indexOf('estate') > -1) {
-                packageName = 'Estate Session'; value = 1990.00;
-            }
+        send('con_conversion_events', {
+            session_id: visitId,
+            package_name: packageName,
+            estimated_value: value
+        }, false);
+    }, true);
 
-            send('con_conversion_events', {
-                session_id: sessionId,
-                package_name: packageName,
-                estimated_value: value
-            }, false);
-        }, true);
-
-    })();
-    </script>
+})();
+</script>
 
 
 
