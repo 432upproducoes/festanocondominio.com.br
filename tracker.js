@@ -1,21 +1,16 @@
 (function() {
     'use strict';
 
-    // ⚙️ CONFIGURAÇÃO DO SEU SUPABASE
-
-const SUPABASE_URL = "https://www.432up.com/supabase-api";
+    // ⚙️ CONFIGURAÇÃO DO SUPABASE
+    const SUPABASE_URL = "https://www.432up.com/supabase-api";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
-    // 1. Identificador de Bot / Crawler
     function isBot() {
         const userAgent = navigator.userAgent.toLowerCase();
         const botKeywords = ['bot', 'crawler', 'spider', 'slurp', 'googlebot', 'bingbot', 'facebookexternalhit', 'headlesschrome', 'lighthouse'];
-        const isBotUserAgent = botKeywords.some(keyword => userAgent.includes(keyword));
-        const isHeadless = !navigator.languages || navigator.languages.length === 0 || !!window.navigator.webdriver;
-        return isBotUserAgent || isHeadless;
+        return botKeywords.some(keyword => userAgent.includes(keyword)) || !navigator.languages || navigator.languages.length === 0 || !!window.navigator.webdriver;
     }
 
-    // 2. ID Único da Sessão
     function getSessionId() {
         let sid = sessionStorage.getItem('con_session_id');
         if (!sid) {
@@ -25,7 +20,6 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
         return sid;
     }
 
-    // 3. Captura de UTMs e Origem
     function getSourceInfo() {
         const urlParams = new URLSearchParams(window.location.search);
         return {
@@ -36,25 +30,24 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
         };
     }
 
-    // 4. Captura de Cidade/Estado via IP (Gratuito no próprio navegador)
+    // Geolocalização ultrarrápida com fallback seguro (Timeout de 1.2s)
     async function getGeoLocation() {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1200);
+
         try {
-            const res = await fetch('https://ipapi.co/json/');
+            const res = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+            clearTimeout(timeoutId);
             if (res.ok) {
                 const data = await res.json();
-                return {
-                    city: data.city || 'Desconhecido',
-                    region: data.region || 'Desconhecido',
-                    ip: data.ip || ''
-                };
+                return { city: data.city || 'Desconhecido', region: data.region || 'Desconhecido', ip: data.ip || '' };
             }
         } catch (e) {
-            // Se houver bloqueio de adblock, prossegue sem travar
+            // Ignora erro de timeout ou adblock
         }
         return { city: 'Desconhecido', region: 'Desconhecido', ip: '' };
     }
 
-    // 5. Envio direto para a API REST do Supabase
     async function sendToSupabase(table, data) {
         try {
             await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
@@ -69,19 +62,18 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
                 keepalive: true
             });
         } catch (err) {
-            // Falha silenciosa para não impactar a navegação
+            console.error('Erro ao enviar dados pro Supabase:', err);
         }
     }
 
-    // 6. Execução Principal ao Carregar a Página
-    document.addEventListener('DOMContentLoaded', async () => {
-        if (isBot()) return; // Ignora bots para não poluir o banco
+    // Execução Principal
+    async function initTracker() {
+        if (isBot()) return;
 
         const sessionId = getSessionId();
         const sourceInfo = getSourceInfo();
         const geo = await getGeoLocation();
 
-        // Grava a Sessão Inicial
         const sessionPayload = {
             id: sessionId,
             ip_address: geo.ip,
@@ -97,11 +89,12 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
             page_path: window.location.pathname
         };
 
-        sendToSupabase('con_sessions', sessionPayload);
+        // Envia a Sessão
+        await sendToSupabase('con_sessions', sessionPayload);
 
         // Captura Cliques nos Botões do WhatsApp
         document.querySelectorAll('a[href*="wa.me"]').forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (e) => {
                 const href = button.getAttribute('href') || '';
                 let packageName = 'Consulta Geral';
                 let estimatedValue = 0.00;
@@ -114,6 +107,7 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
                     estimatedValue = 1990.00;
                 }
 
+                // Envia a conversão assincronamente sem travar a abertura da aba
                 sendToSupabase('con_conversion_events', {
                     session_id: sessionId,
                     package_name: packageName,
@@ -121,5 +115,11 @@ const SUPABASE_URL = "https://www.432up.com/supabase-api";
                 });
             });
         });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTracker);
+    } else {
+        initTracker();
+    }
 })();
