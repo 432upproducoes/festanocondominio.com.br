@@ -660,6 +660,13 @@
 <!-- COLE ISSO DENTRO DO index.html, LOGO ANTES DE </body>     -->
 <!-- E REMOVA a linha antiga: <script src="tracker.js"></script> -->
 <!-- ========================================================= -->
+
+
+
+<!-- ========================================================= -->
+<!-- COLE ISSO DENTRO DO index.html, LOGO ANTES DE </body>     -->
+<!-- E REMOVA a linha antiga: <script src="tracker.js"></script> -->
+<!-- ========================================================= -->
 <script>
 (function() {
     'use strict';
@@ -684,21 +691,13 @@
     }
     var sessionId = getSessionId();
 
-    // Envia dados usando sendBeacon (não é bloqueado por navegação de página,
-    // ideal pra clique que leva a outro site como o WhatsApp) com fallback pra fetch.
+    // Envia dados via fetch com keepalive:true (sobrevive à navegação de página,
+    // funciona pro clique que leva a outro site como o WhatsApp).
+    // OBS: sendBeacon NÃO é usado aqui porque não permite enviar os headers
+    // 'apikey' e 'Authorization' que o Supabase exige — o insert falhava
+    // silenciosamente com sendBeacon.
     function send(table, payload) {
         var url = SUPABASE_URL + '/rest/v1/' + table;
-        var body = JSON.stringify(payload);
-
-        if (navigator.sendBeacon) {
-            var blob = new Blob([body], { type: 'text/plain' });
-            // sendBeacon não permite headers customizados, então passamos a key na própria URL
-            var beaconUrl = url + '?apikey=' + encodeURIComponent(SUPABASE_KEY);
-            var ok = navigator.sendBeacon(beaconUrl, blob);
-            if (ok) return;
-        }
-
-        // Fallback (navegadores sem sendBeacon, ou se ele recusar)
         fetch(url, {
             method: 'POST',
             keepalive: true,
@@ -708,8 +707,12 @@
                 'Authorization': 'Bearer ' + SUPABASE_KEY,
                 'Prefer': 'return=minimal'
             },
-            body: body
-        }).catch(function(e) { console.warn('[tracking] erro:', e); });
+            body: JSON.stringify(payload)
+        }).then(function(res) {
+            if (!res.ok) {
+                res.text().then(function(t) { console.warn('[tracking] Falha', table, res.status, t); });
+            }
+        }).catch(function(e) { console.warn('[tracking] erro de rede:', e); });
     }
 
     function getSourceInfo() {
@@ -775,6 +778,7 @@
 
 })();
 </script>
+
 
 
 </body>
