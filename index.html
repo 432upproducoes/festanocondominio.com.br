@@ -3,17 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região</title>
     <meta name="description" content="Música ao vivo de alta fidelidade, DJ profissional e iluminação cênica sob medida para celebrações em condomínios e casas de alto padrão em Bragança, Atibaia e região.">
     <meta name="keywords" content="Música ao vivo e DJ Bragança Paulista, voz e violão condomínio Atibaia, som para festa em condomínio Bragança Paulista, iluminação cênica Extrema, DJ festa de aniversário, estrutura de som para casa em condomínio">
     <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://festanocondominio.com.br/">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://festanocondominio.com.br/">
     <meta property="og:title" content="Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região">
     <meta property="og:description" content="Experiência musical exclusiva, sonorização de alta fidelidade e estética clean para eventos na sua residência ou área gourmet.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1200&q=80">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Fix: dark mode aplicado ANTES do primeiro paint, sem flash -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <!-- Fix: preload da imagem hero (LCP) -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80" fetchpriority="high">
 
     <script type="application/ld+json">
     {
@@ -38,10 +50,44 @@
       ],
       "knowsAbout": [
         "Música ao Vivo para Aniversários",
-        "DJ Profissional para Eventos Residênciais",
+        "DJ Profissional para Eventos Residenciais",
         "Sonorização para Áreas Gourmet e Varandas",
         "Acústica Controlada para Condomínios Fechados",
         "Iluminação Cênica Arquitetural"
+      ]
+    }
+    </script>
+
+    <!-- Fix: FAQPage schema (rich snippet no Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Vocês atendem em condomínios de Bragança, Atibaia e Extrema?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim! Nossa base fica na região, o que nos permite atender com total agilidade condomínios e residências em Bragança Paulista, Atibaia, Extrema, Itatiba e arredores — com facilidade logística e sem taxas de deslocamento da capital."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "E as regras de barulho e portaria do meu condomínio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Trabalhamos com equipamentos de alta fidelidade e direcionamento acústico focado no seu ambiente. Isso garante um preenchimento musical agradável e envolvente sem espalhar ruído exagerado para a vizinhança. Além disso, enviamos previamente todos os dados da equipe para liberação na portaria."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como definimos o repertório da apresentação?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Alinhamos com antecedência o estilo musical desejado pelo anfitrião (tanto para a atração ao vivo quanto para o set de DJ), incluindo sugestões e músicas que não podem faltar, garantindo um ambiente sob medida para o seu evento."
+          }
+        }
       ]
     }
     </script>
@@ -254,16 +300,16 @@
             </nav>
 
             <div class="hidden md:flex items-center gap-4">
-                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data." 
-                   target="_blank" 
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
+                   target="_blank" rel="noopener"
                    class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-6 py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing block">
                     Consultar Data
                 </a>
             </div>
 
             <div class="flex items-center gap-3 md:hidden">
-                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data." 
-                   target="_blank" 
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
+                   target="_blank" rel="noopener"
                    class="bg-champagne hover:bg-champagneHover text-white text-[11px] font-extrabold px-4 py-2.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-sm flex items-center gap-1.5">
                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                     <span>Consultar</span>
@@ -274,8 +320,10 @@
 
     <section class="relative w-full min-h-[85vh] flex items-center justify-center pt-28 pb-16 overflow-hidden border-b border-subtleBorder dark:border-darkSubtleBorder bg-darkEspresso">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80" 
-                 alt="Música ao Vivo e DJ em Condomínio" 
+            <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=2000&q=80"
+                 alt="Música ao vivo e DJ tocando em festa de condomínio de alto padrão em Bragança Paulista"
+                 width="2000" height="1333"
+                 fetchpriority="high"
                  class="w-full h-full object-cover object-center brightness-100 contrast-95">
             <div class="absolute inset-0 bg-gradient-to-b from-darkEspresso/30 via-amber-950/20 to-darkEspresso/40"></div>
         </div>
@@ -355,8 +403,9 @@
                 <div class="bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-3xl p-7 flex flex-col justify-between shadow-sm card-tide-1">
                     <div>
                         <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
-                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80" 
-                                 alt="Pocket Session" 
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80"
+                                 alt="Pocket Session - DJ e música ao vivo para área gourmet e varandas"
+                                 width="800" height="533" loading="lazy" decoding="async"
                                  class="w-full h-full object-cover">
                         </div>
 
@@ -404,8 +453,8 @@
                             <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
                             <span class="text-lg font-extrabold text-darkEspresso dark:text-champagne">R$ 1.290,00</span>
                         </div>
-                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20reservar%20a%20Pocket%20Session%20(R$%201.290)." 
-                           target="_blank" 
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20reservar%20a%20Pocket%20Session%20(R$%201.290)."
+                           target="_blank" rel="noopener"
                            class="w-full block text-center bg-zinc-100 dark:bg-[#2A221B] hover:bg-zinc-200 dark:hover:bg-[#382E25] text-darkEspresso dark:text-offwhite text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200">
                             Reservar Pocket Session
                         </a>
@@ -419,8 +468,9 @@
 
                     <div>
                         <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 bg-amber-50 dark:bg-amber-950/30">
-                            <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80" 
-                                 alt="Estate Session" 
+                            <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=800&q=80"
+                                 alt="Estate Session - projeto cênico completo com moving heads para deck e jardins"
+                                 width="800" height="533" loading="lazy" decoding="async"
                                  class="w-full h-full object-cover">
                         </div>
 
@@ -468,8 +518,8 @@
                             <span class="text-xs font-bold text-mutedText dark:text-champagne/70 uppercase tracking-widest">Investimento</span>
                             <span class="text-lg font-extrabold text-champagne">R$ 1.990,00</span>
                         </div>
-                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20escolher%20a%20Estate%20Session%20(R$%201.990)." 
-                           target="_blank" 
+                        <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20escolher%20a%20Estate%20Session%20(R$%201.990)."
+                           target="_blank" rel="noopener"
                            class="w-full block text-center bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold py-3.5 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing">
                             Escolher Estate Session
                         </a>
@@ -482,8 +532,8 @@
                 <p class="text-xs sm:text-sm text-bodyText dark:text-[#D1C7BD] font-medium mb-4">
                     Trabalhamos também com formação em Duo (Voz &amp; Violão Dupla), combinações de Música ao Vivo + DJ no mesmo evento e prazos estendidos.
                 </p>
-                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20formatos%20especiais%20(Duo/Combo%20M%C3%BAsica%20+%20DJ)." 
-                   target="_blank" 
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Gostaria%20de%20consultar%20formatos%20especiais%20(Duo/Combo%20M%C3%BAsica%20+%20DJ)."
+                   target="_blank" rel="noopener"
                    class="inline-flex items-center gap-2 text-champagne hover:text-champagneHover text-xs font-extrabold uppercase tracking-wider underline underline-offset-4 transition-colors">
                     <span>Consultar Opções Especiais no WhatsApp</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -551,8 +601,8 @@
             <div class="max-w-xl mx-auto bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder p-8 rounded-3xl shadow-sm">
                 <h3 class="text-xl font-extrabold text-darkEspresso dark:text-offwhite mb-3">Pronto para organizar seu próximo evento no condomínio?</h3>
                 <p class="text-sm text-bodyText dark:text-[#D1C7BD] font-medium mb-6">Consulte a disponibilidade da sua data com atendimento rápido no WhatsApp.</p>
-                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20disponibilidade." 
-                   target="_blank" 
+                <a href="https://wa.me/5511948564577?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20disponibilidade."
+                   target="_blank" rel="noopener"
                    class="bg-champagne hover:bg-champagneHover text-white text-xs font-extrabold px-8 py-4 rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md cta-breathing inline-block">
                     Consultar Data no WhatsApp
                 </a>
@@ -574,13 +624,6 @@
                 lucide.createIcons();
             }
 
-            const html = document.documentElement;
-
-            // Ajuste automático do tema escuro/claro do sistema do usuário
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                html.classList.add('dark');
-            }
-
             // Accordion do FAQ
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.addEventListener('click', () => {
@@ -593,5 +636,25 @@
             });
         });
     </script>
+
+    <!-- Analytics: IDs placeholder, ativar quando disponíveis (mesmo padrão do 432up.com) -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-XXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GTM-XXXXXXX');
+    </script>
+    <script>
+      !function(f,b,e,v,n,t,s){...}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', 'SEU_PIXEL_ID');
+      fbq('track', 'PageView');
+    </script>
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){...})(window, document, "clarity", "script", "SEU_CLARITY_ID");
+    </script>
+    -->
+
 </body>
 </html>
