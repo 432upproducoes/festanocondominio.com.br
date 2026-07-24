@@ -124,6 +124,30 @@ VERSÃO ATUAL: v1.0 SEO Max | Estrutura Otimizada e Limpa
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest" defer></script>
+<!-- Tailwind CDN & Configuração de Cores -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          champagne: '#D4B068',
+          champagneHover: '#C29D55',
+          offwhite: '#FAF9F6',
+          darkEspresso: '#1C1814',
+          bodyText: '#3F3F46',
+          mutedText: '#71717A',
+          cardBg: '#FFFFFF',
+          darkCardBg: '#1A1511',
+          subtleBorder: '#E4E4E7',
+          darkSubtleBorder: '#382D24',
+        }
+      }
+    }
+  }
+</script>
+
 
     <!-- Folha de Estilos Externa -->
     <link rel="stylesheet" href="style.css">
@@ -505,7 +529,7 @@ VERSÃO ATUAL: v1.0 SEO Max | Estrutura Otimizada e Limpa
         </div>
     </footer>
 
-    <!-- Script de Rastreamento Externo -->
+    <!-- Script de Rastreamento Externo (Rastreamento do Google/Meta mantido direto no HTML) -->
     <script src="tracker.js" defer></script>
 
     <!-- Script Principal de Lógica, Interatividade e Proteção -->
