@@ -683,69 +683,90 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         });
     </script>
 
-<!-- Tracking de visitas e conversões - Versão Simples e Resistente -->
+
+
+<!-- Tracking de Visitas e Conversões - Versão Estável Refinada (Stats v1.6 Ready) -->
 <script>
 ;(function() {
     'use strict';
 
-    // Filtro leve de bots
     function isBot() {
         var ua = (navigator.userAgent || '').toLowerCase();
-        var bots = ['bot','crawler','spider','slurp','googlebot','bingbot','facebookexternalhit','headlesschrome','lighthouse','pagespeed','gtmetrix'];
-        return bots.some(function(k){ return ua.indexOf(k) > -1; });
+        return /bot|crawler|spider|slurp|googlebot|bingbot|headless|lighthouse|pagespeed/.test(ua);
     }
     if (isBot()) return;
-
-    // Evita execução em iframes
     try { if (window.self !== window.top) return; } catch(e) { return; }
 
     var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
     var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
 
-    var visitId = 'vis_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+    var visitId = null;
+    try { visitId = sessionStorage.getItem('con_sid'); } catch(e) {}
+    if (!visitId) {
+        visitId = 'vis_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+        try { sessionStorage.setItem('con_sid', visitId); } catch(e) {}
+    }
+
     var startTime = Date.now();
     var durationSent = false;
 
-    // Função de envio principal (com sendBeacon + fetch fallback)
+    // Detectar Tipo e Sistema do Dispositivo
+    function getDeviceLabel() {
+        var ua = navigator.userAgent || '';
+        if (/iPad|iPhone|iPod/.test(ua)) return 'Mobile (iPhone / iOS)';
+        if (/Android/.test(ua)) return 'Mobile (Android)';
+        if (/Macintosh/.test(ua)) return 'Desktop (macOS)';
+        if (/Windows/.test(ua)) return 'Desktop (Windows)';
+        return /Mobi/i.test(ua) ? 'Mobile' : 'Desktop';
+    }
+
+    // Capturar Atribuição de Tráfego e UTMs Reais
+    function getSourceInfo() {
+        var params = new URLSearchParams(window.location.search);
+        var ref = document.referrer || '';
+        
+        var source = params.get('utm_source');
+        if (!source) {
+            if (ref.indexOf('google') > -1) source = 'Google Ads';
+            else if (ref.indexOf('instagram') > -1) source = 'Instagram';
+            else source = 'direct';
+        }
+
+        return {
+            source: source,
+            medium: params.get('utm_medium') || 'none',
+            campaign: params.get('utm_campaign') || 'none',
+            term: params.get('utm_term') || params.get('q') || 'Não especificada',
+            content: params.get('utm_content') || 'Padrão',
+            referrer: ref || 'direct'
+        };
+    }
+
+    var src = getSourceInfo();
+    var deviceLabel = getDeviceLabel();
+
     function sendData(table, payload, isExit) {
         var url = SUPABASE_URL + '/rest/v1/' + table;
-        
-        var data = JSON.stringify(payload);
-        
-        // Tenta sendBeacon primeiro (mais resistente em saída de página)
+        var dataStr = JSON.stringify(payload);
+
         if (isExit && navigator.sendBeacon) {
-            navigator.sendBeacon(url, new Blob([data], { type: 'application/json' }));
+            navigator.sendBeacon(url, new Blob([dataStr], { type: 'application/json' }));
             return;
         }
-        
-        // Fallback normal
+
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_KEY,
-                'Authorization': 'Bearer ' + SUPABASE_KEY,
-                'Prefer': 'return=minimal'
+                'Authorization': 'Bearer ' + SUPABASE_KEY
             },
-            body: data,
-            keepalive: isExit
+            body: dataStr,
+            keepalive: !!isExit
         }).catch(function(){});
     }
 
-    function getSourceInfo() {
-        var params = new URLSearchParams(window.location.search);
-        return {
-            source: params.get('utm_source') || 'direct',
-            medium: params.get('utm_medium') || 'none',
-            campaign: params.get('utm_campaign') || 'none',
-            referrer: document.referrer || 'direct'
-        };
-    }
-
-    var src = getSourceInfo();
-    var device = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
-
-    // 1. Registro inicial da visita
+    // 1. Registro Inicial da Visita
     sendData('con_sessions', {
         id: visitId,
         city: 'Bragança Paulista',
@@ -754,17 +775,20 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         source: src.source,
         medium: src.medium,
         campaign: src.campaign,
+        utm_term: src.term,
+        utm_content: src.content,
         referrer: src.referrer,
-        device: device,
+        device: deviceLabel,
         page_path: window.location.pathname,
-        duration_seconds: 0
+        duration_seconds: 0,
+        time_total: 0
     }, false);
 
-    // 2. Geolocalização (opcional e leve)
+    // 2. Geolocalização Leve por IP (Fallback Silencioso)
     try {
         fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(1500) })
-            .then(r => r.ok ? r.json() : null)
-            .then(data => {
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
                 if (data && data.city) {
                     sendData('con_sessions', {
                         id: visitId + '_geo',
@@ -775,7 +799,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                         medium: src.medium,
                         campaign: src.campaign,
                         referrer: src.referrer,
-                        device: device,
+                        device: deviceLabel,
                         page_path: window.location.pathname,
                         duration_seconds: Math.round((Date.now() - startTime) / 1000)
                     }, false);
@@ -784,13 +808,11 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
             .catch(function(){});
     } catch(e) {}
 
-    // 3. Registro de duração ao sair da página
+    // 3. Duração Final da Sessão
     function recordFinalDuration() {
         if (durationSent) return;
         durationSent = true;
-
-        var finalSeconds = Math.max(0, Math.round((Date.now() - startTime) / 1000));
-        if (finalSeconds < 1) return;
+        var finalSeconds = Math.max(1, Math.round((Date.now() - startTime) / 1000));
 
         sendData('con_sessions', {
             id: visitId + '_end',
@@ -801,10 +823,11 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
             medium: src.medium,
             campaign: src.campaign,
             referrer: src.referrer,
-            device: device,
+            device: deviceLabel,
             page_path: window.location.pathname,
-            duration_seconds: finalSeconds
-        }, true); // true = isExit
+            duration_seconds: finalSeconds,
+            time_total: finalSeconds
+        }, true);
     }
 
     window.addEventListener('pagehide', recordFinalDuration);
@@ -812,7 +835,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         if (document.visibilityState === 'hidden') recordFinalDuration();
     });
 
-    // 4. Captura de cliques no WhatsApp
+    // 4. Conversões no WhatsApp
     document.addEventListener('click', function(e) {
         var link = e.target.closest ? e.target.closest('a[href*="wa.me"]') : null;
         if (!link) return;
@@ -838,6 +861,8 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
 
 })();
 </script>
+
+
 
 
 </body>
