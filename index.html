@@ -1,6 +1,6 @@
 <!-- 
 ====================================================================
-VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile no header + isolamento de script do tracker.
+VERSÃO ATUAL: v1.0 SEO Max | Estrutura Otimizada e Limpa
 ====================================================================
 -->
 <!DOCTYPE html>
@@ -17,18 +17,19 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
     <meta name="apple-mobile-web-app-title" content="FestaCondomínio">
 
     <title>Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região</title>
-    <meta name="description" content="Música ao vivo de alta fidelidade, DJ profissional e iluminação cênica sob medida para celebrações em condomínios e casas de alto padrão em Bragança, Atibaia e região.">
-    <meta name="keywords" content="Música ao vivo e DJ Bragança Paulista, voz e violão condomínio Atibaia, som para festa em condomínio Bragança Paulista, iluminação cênica Extrema, DJ festa de aniversário, estrutura de som para casa em condomínio">
+    <meta name="description" content="Música ao vivo de alta fidelidade, DJ profissional e iluminação cênica sob medida para celebrações em condomínios e casas de alto padrão em Bragança, Atibaia, Quinta da Baroneza, Euroville e região.">
+    <meta name="keywords" content="Música ao vivo e DJ Bragança Paulista, voz e violão condomínio Atibaia, som para festa em condomínio Bragança Paulista, iluminação cênica Extrema, DJ festa de aniversário, estrutura de som para casa em condomínio, música ao vivo Quinta da Baroneza, DJ Euroville Bragança, som para área gourmet Fazenda da Grama, atração musical Rosário de Fátima, voz e violão Jardim das Palmeiras, som aveludado condomínio fechado">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://festanocondominio.com.br/">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://festanocondominio.com.br/">
     <meta property="og:title" content="Música ao Vivo & DJ para Sua Festa no Condomínio | Bragança e Região">
-    <meta property="og:description" content="Experiência musical exclusiva, sonorização de alta fidelidade e estética clean para eventos na sua residência ou área gourmet.">
+    <meta property="og:description" content="Experiência musical exclusiva, sonorização de alta fidelidade e estética clean para eventos na sua residência ou área gourmet nos principais condomínios da região.">
     <meta property="og:image" content="estate-session.webp">
     <meta name="twitter:card" content="summary_large_image">
 
+    <!-- Verificação inicial de Dark Mode rápido -->
     <script>
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
@@ -37,6 +38,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
 
     <link rel="preload" as="image" href="hero-festa.webp" fetchpriority="high">
 
+    <!-- Schema.org - JSON-LD Completo -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -56,7 +58,13 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         { "@type": "City", "name": "Bragança Paulista" },
         { "@type": "City", "name": "Atibaia" },
         { "@type": "City", "name": "Extrema" },
-        { "@type": "City", "name": "Itatiba" }
+        { "@type": "City", "name": "Itatiba" },
+        { "@type": "AdministrativeArea", "name": "Quinta da Baroneza" },
+        { "@type": "AdministrativeArea", "name": "Residencial Euroville I e II" },
+        { "@type": "AdministrativeArea", "name": "Fazenda da Grama" },
+        { "@type": "AdministrativeArea", "name": "Condomínio Rosário de Fátima" },
+        { "@type": "AdministrativeArea", "name": "Residencial Terrazas" },
+        { "@type": "AdministrativeArea", "name": "Jardim das Palmeiras" }
       ]
     }
     </script>
@@ -71,7 +79,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
           "name": "Vocês atendem em condomínios de Bragança, Atibaia e Extrema?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sim! Nossa base fica na região, o que nos permite atender com total agilidade condomínios e residências em Bragança Paulista, Atibaia, Extrema, Itatiba e arredores — sem taxas adicionais de deslocamento da capital."
+            "text": "Sim! Nossa base fica na região, o que nos permite atender com total agilidade e cadastro prévio em portarias de residências e condomínios de alto padrão como Quinta da Baroneza, Euroville, Rosário de Fátima, Fazenda da Grama e toda a região de Bragança Paulista, Atibaia, Extrema, Itatiba e arredores — sem taxas adicionais de deslocamento da capital."
           }
         },
         {
@@ -110,184 +118,15 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
     }
     </script>
 
+    <!-- Tailwind CDN & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest" defer></script>
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        champagne: '#D4B068',
-                        champagneHover: '#C29D55',
-                        offwhite: '#FAF9F6',
-                        darkEspresso: '#1C1814',
-                        bodyText: '#3F3F46',
-                        mutedText: '#71717A',
-                        cardBg: '#FFFFFF',
-                        darkCardBg: '#1A1511',
-                        subtleBorder: '#E4E4E7',
-                        darkSubtleBorder: '#382D24'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            background-color: #FAF9F6;
-            color: #1C1814;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-
-        html.dark body {
-            background-color: #0F0D0B;
-            color: #FAF9F6;
-        }
-
-        @keyframes tideBreathing {
-            0%, 100% { transform: translateY(0px); border-color: rgba(212, 176, 104, 0.35); box-shadow: 0 20px 45px rgba(28, 24, 20, 0.12); }
-            50% { transform: translateY(-2.5px); border-color: rgba(212, 176, 104, 0.60); box-shadow: 0 25px 55px rgba(212, 176, 104, 0.18); }
-        }
-
-        @keyframes cardTide {
-            0%, 100% { transform: translateY(0px); border-color: rgba(228, 228, 231, 0.9); }
-            50% { transform: translateY(-2px); border-color: rgba(212, 176, 104, 0.45); }
-        }
-
-        /* HEADER & GLASSMORPHISM */
-        .header-glass {
-            background-color: rgba(250, 249, 246, 0.75);
-            backdrop-filter: blur(16px) brightness(1.02);
-            -webkit-backdrop-filter: blur(16px) brightness(1.02);
-        }
-
-        html.dark .header-glass {
-            background-color: rgba(15, 13, 11, 0.45);
-            backdrop-filter: blur(16px) brightness(1.05);
-            -webkit-backdrop-filter: blur(16px) brightness(1.05);
-        }
-
-        /* CARD HERO GLASS CRISTALINO (~45%) */
-        .hero-amber-overlay {
-            background: linear-gradient(135deg, rgba(250, 243, 230, 0.85) 0%, rgba(243, 232, 211, 0.78) 100%);
-            backdrop-filter: blur(16px) brightness(1.05);
-            -webkit-backdrop-filter: blur(16px) brightness(1.05);
-            animation: tideBreathing 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-            border: 1px solid rgba(212, 176, 104, 0.35);
-        }
-
-        html.dark .hero-amber-overlay {
-            background: linear-gradient(135deg, rgba(28, 24, 20, 0.45) 0%, rgba(212, 176, 104, 0.20) 100%);
-            backdrop-filter: blur(18px) brightness(1.05);
-            -webkit-backdrop-filter: blur(18px) brightness(1.05);
-            border: 1px solid rgba(212, 176, 104, 0.25);
-        }
-
-        /* DEGRADÊ DOURADO DO TÍTULO HERO */
-        .text-offwhite-to-champagne {
-            background: linear-gradient(135deg, #1C1814 0%, #4A3B24 40%, #D4B068 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
-        }
-
-        html.dark .text-offwhite-to-champagne {
-            background: linear-gradient(135deg, #FFFFFF 0%, #F5EBE0 30%, #D4B068 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 1px 2px rgba(28, 24, 20, 0.4));
-        }
-
-        .hero-title-dark {
-            color: #1C1814;
-        }
-
-        html.dark .hero-title-dark {
-            color: #F3E8D3;
-        }
-
-        .card-tide-1 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-        .card-tide-2 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.8s; }
-        .card-tide-3 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 3.6s; }
-
-        .penthouse-highlight {
-            border: 2px solid #D4B068;
-            box-shadow: 0 10px 30px rgba(212, 176, 104, 0.25);
-        }
-
-        .logo-ape-suave { color: #D4B068; }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            opacity: 0;
-        }
-
-        .faq-item.active .faq-answer {
-            max-height: 300px;
-            opacity: 1;
-            padding-top: 0.875rem;
-        }
-
-        .faq-item.active .faq-icon {
-            transform: rotate(180deg);
-            color: #D4B068;
-        }
-
-        /* ORBES CÊNICOS DE FUNDO */
-        @keyframes floatOrb1 {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(80px, -60px) scale(1.2); }
-        }
-
-        @keyframes floatOrb2 {
-            0%, 100% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(-70px, 70px) scale(1.25); }
-        }
-
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.45;
-            transition: opacity 0.5s ease;
-        }
-
-        html.dark .bg-orb {
-            opacity: 0.35;
-        }
-
-        .orb-champagne {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #D4B068 0%, rgba(212, 176, 104, 0) 70%);
-            top: 10%;
-            left: -100px;
-            animation: floatOrb1 18s ease-in-out infinite;
-        }
-
-        .orb-amber {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #92400E 0%, rgba(146, 64, 14, 0) 70%);
-            bottom: 5%;
-            right: -120px;
-            animation: floatOrb2 22s ease-in-out infinite;
-        }
-    </style>
+    <!-- Folha de Estilos Externa -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen antialiased selection:bg-champagne selection:text-white overflow-x-hidden relative">
 
@@ -308,7 +147,6 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                 <a href="#faq" class="hover:text-champagne transition-colors py-1">Dúvidas</a>
             </nav>
 
-            <!-- Botão Desktop -->
             <div class="hidden md:flex items-center gap-4">
                 <a href="https://wa.me/5511966345171?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
                    target="_blank" rel="noopener"
@@ -317,7 +155,6 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                 </a>
             </div>
 
-            <!-- Botão Mobile Restaurado -->
             <div class="flex items-center gap-3 md:hidden">
                 <a href="https://wa.me/5511966345171?text=Ol%C3%A1!%20Vim%20pelo%20site%20Festa%20no%20Condom%C3%ADnio%20e%20gostaria%20de%20consultar%20a%20disponibilidade%20de%20data."
                    target="_blank" rel="noopener"
@@ -360,7 +197,6 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         </div>
     </section>
 
-    <!-- MAIN CONTENT -->
     <main class="max-w-5xl mx-auto px-6 py-16 space-y-20 relative z-10">
 
         <!-- DIFERENCIAIS -->
@@ -439,7 +275,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                         </p>
 
                         <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
-                            <p class="text-[11px] font-extrabold tracking-widest uppercase text-amber-800 dark:text-champagne/80 mb-3.5">Escolha o formato do seu evento:</p>
+                            <p class="text-[11px] font-extrabold tracking-widest uppercase text-amber-800 dark:text-champagne/80 mb-3.5">Escolha a atração principal:</p>
                             <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold">
                                 <li class="flex items-start gap-2.5">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
@@ -506,7 +342,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                         </p>
 
                         <div class="pt-4 border-t border-subtleBorder dark:border-darkSubtleBorder mb-6">
-                            <p class="text-[11px] font-extrabold tracking-widest uppercase text-amber-800 dark:text-champagne/80 mb-3.5">Escolha o formato do seu evento:</p>
+                            <p class="text-[11px] font-extrabold tracking-widest uppercase text-amber-800 dark:text-champagne/80 mb-3.5">Escolha a atração principal:</p>
                             <ul class="space-y-3.5 text-[15px] text-bodyText dark:text-[#EAE3D9] font-semibold">
                                 <li class="flex items-start gap-2.5">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
@@ -526,7 +362,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-champagne shrink-0 mt-1"></i>
-                                    <span><strong>Tempo Estendido:</strong> +1 hora de atração para curtir a noite sem pressa.</span>
+                                    <span><strong>Duração Ampliada:</strong> +1 hora adicional de performance em relação à Pocket Session.</span>
                                 </li>
                             </ul>
                         </div>
@@ -546,11 +382,10 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                 </div>
             </div>
 
-            <!-- Bloco Adicional de Atendimento Personalizado -->
             <div class="mt-8 bg-cardBg dark:bg-darkCardBg border border-subtleBorder dark:border-darkSubtleBorder rounded-2xl p-6 sm:p-8 text-center shadow-sm">
                 <h3 class="text-base sm:text-lg font-extrabold text-darkEspresso dark:text-offwhite mb-2">Procura um formato personalizado ou mais de uma atração?</h3>
                 <p class="text-sm text-bodyText dark:text-[#D1C7BD] font-medium max-w-2xl mx-auto mb-5 leading-relaxed">
-                    Trabalhamos também com formação em Duo (Voz &amp; Violão Dupla), combinações de Música ao Vivo + DJ no mesmo evento e prazos estendidos.
+                    Trabalhamos também com Duo Musical (Voz &amp; Violão), formações com instrumentos cênicos e combos de Música ao Vivo + DJ no mesmo evento.
                 </p>
                 <a href="https://wa.me/5511966345171?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20consultar%20op%C3%A7%C3%B5es%20especiais%20e%20personalizadas."
                    target="_blank" rel="noopener"
@@ -581,7 +416,7 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
                     </div>
                     <div class="faq-answer">
                         <p class="text-[15px] text-bodyText dark:text-[#D1C7BD] font-semibold leading-relaxed pl-6">
-                            Sim! Nossa base é na região, o que garante pontualidade e agilidade para atender residências em Bragança Paulista, Atibaia, Extrema, Itatiba e proximidades.
+                            Sim! Nossa base é na região, o que garante pontualidade, agilidade e cadastro prévio em portarias de residências e condomínios de alto padrão como Quinta da Baroneza, Euroville, Rosário de Fátima, Fazenda da Grama e toda a região de Bragança Paulista, Atibaia, Extrema, Itatiba e proximidades.
                         </p>
                     </div>
                 </div>
@@ -670,23 +505,10 @@ VERSÃO ATUAL: v1.53 | ATUALIZAÇÃO: Correção e reativação do botão mobile
         </div>
     </footer>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            if (typeof lucide !== 'undefined') { lucide.createIcons(); }
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const isActive = item.classList.contains('active');
-                    document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
-                    if (!isActive) { item.classList.add('active'); }
-                });
-            });
-        });
-    </script>
+    <!-- Script de Rastreamento Externo -->
+    <script src="tracker.js" defer></script>
 
-
-
-<script src="tracker.js" defer></script>
-
-
+    <!-- Script Principal de Lógica, Interatividade e Proteção -->
+    <script src="script.js" defer></script>
 </body>
 </html>

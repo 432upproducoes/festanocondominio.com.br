@@ -1,11 +1,6 @@
 <!-- 
 ====================================================================
-VERSÃO ATUAL: v1.6 | ATUALIZAÇÃO: Transição suave de tema automática com o sistema em tempo real, Cards Alternáveis (Tráfego <-> Financeiro) com animação suave, Gráfico de Auréola (Donut) para Origens de Tráfego, Tabs multimodo (Heatmap, Evolução e Funil) e Lançamentos Retroativos.
---------------------------------------------------------------------
-HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
-- v1.6: Listener de tema do sistema em tempo real + Cards alternáveis (Tráfego/Financeiro) + Gráfico Auréola de Origens + Transições suaves.
-- v1.5: Tabs para Heatmap/Linha do Tempo/Funil + Lançamentos Retroativos + Modal de Trajeto Completo + Filtro Anti-Bots.
-- v1.4: Rolagem interna individual no Live Feed + Contraste refinado + Cabeçalho de versão.
+VERSÃO ATUAL: v1.6.4 | ATUALIZAÇÃO: Card 1 dobrado (Visitas + R$ Orçamentos), Card de Origem Dinâmico com Top 3 e Trajeto Limpo no Modal.
 ====================================================================
 -->
 <!DOCTYPE html>
@@ -105,7 +100,7 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 mb-8 border-b border-zinc-200 dark:border-darkBorder gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <span class="text-xs uppercase font-extrabold tracking-widest text-champagne bg-champagne/15 px-3 py-1 rounded-full border border-champagne/40">Intelligence Hub v1.6</span>
+                <span class="text-xs uppercase font-extrabold tracking-widest text-champagne bg-champagne/15 px-3 py-1 rounded-full border border-champagne/40">Intelligence Hub v1.6.4</span>
                 <span id="last-update" class="text-xs text-muted-dynamic font-semibold">• Carregando dados...</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 text-title-dynamic">Painel de Performance &amp; Live Tracking</h1>
@@ -277,14 +272,14 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
                 <div class="p-3.5 bg-amber-50 dark:bg-champagne/15 border border-champagne/40 rounded-xl flex items-start gap-2.5">
                     <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-champagne shrink-0 mt-0.5"></i>
                     <p class="text-[11px] text-amber-950 dark:text-amber-200/90 leading-snug font-semibold">
-                        <strong class="text-amber-800 dark:text-champagne">Dica Pro:</strong> Clique em qualquer sessão para abrir o modal com a <u class="cursor-pointer">linha do tempo completa de N passos</u>, permanência e modelo do dispositivo!
+                        <strong class="text-amber-800 dark:text-champagne">Dica Pro:</strong> Clique em qualquer sessão para abrir a jornada de passos navegados!
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: Trajeto Completo (Live Feed Expansível N Passos) -->
+    <!-- MODAL: Trajeto Completo (Live Feed Expansível) -->
     <div id="modal-journey" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="card-custom w-full max-w-2xl rounded-2xl p-6 relative max-h-[90vh] flex flex-col">
             <button onclick="fecharModalJourney()" class="absolute top-4 right-4 text-muted-dynamic hover:text-champagne"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -292,27 +287,23 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             <div class="flex items-center gap-3 mb-4 pb-4 border-b border-zinc-200 dark:border-darkBorder">
                 <span id="modal-device-icon" class="p-2.5 bg-champagne/15 text-champagne rounded-xl border border-champagne/30"><i data-lucide="smartphone" class="w-6 h-6"></i></span>
                 <div>
-                    <h3 id="modal-session-title" class="text-base font-extrabold text-title-dynamic">Visita em São Paulo - SP</h3>
-                    <p id="modal-session-subtitle" class="text-xs text-muted-dynamic font-medium">iPhone 15 Pro • Origem: Google Ads ("banda para evento")</p>
+                    <h3 id="modal-session-title" class="text-base font-extrabold text-title-dynamic">Visita em Bragança Paulista</h3>
+                    <p id="modal-session-subtitle" class="text-xs text-muted-dynamic font-medium">Dispositivo • Origem</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 text-xs font-mono">
+            <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 mb-4 text-xs font-mono">
                 <div class="p-2.5 bg-inner-dynamic rounded-lg">
                     <span class="text-muted-dynamic block text-[10px]">Tempo Permanência:</span>
-                    <strong id="modal-time-total" class="text-amber-700 dark:text-champagne">2 min 14 seg</strong>
+                    <strong id="modal-time-total" class="text-amber-700 dark:text-champagne">0 seg</strong>
                 </div>
                 <div class="p-2.5 bg-inner-dynamic rounded-lg">
-                    <span class="text-muted-dynamic block text-[10px]">Palavra-chave Digitada:</span>
-                    <strong id="modal-keyword" class="text-title-dynamic truncate block">banda casamento luxo</strong>
-                </div>
-                <div class="p-2.5 bg-inner-dynamic rounded-lg col-span-2 sm:col-span-1">
-                    <span class="text-muted-dynamic block text-[10px]">Anúncio Clicado:</span>
-                    <strong id="modal-ad" class="text-title-dynamic truncate block">Vídeo 02 - Pocket Session</strong>
+                    <span class="text-muted-dynamic block text-[10px]">Campanha / Termo:</span>
+                    <strong id="modal-ad" class="text-title-dynamic truncate block">Geral / Sem Termo</strong>
                 </div>
             </div>
 
-            <h4 class="text-xs font-extrabold text-title-dynamic uppercase tracking-wider mb-2">Linha do Tempo Navegada (Passo a Passo):</h4>
+            <h4 class="text-xs font-extrabold text-title-dynamic uppercase tracking-wider mb-2">Linha do Tempo Registrada (N Passos):</h4>
             <div id="modal-steps-list" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar text-xs font-mono">
                 <!-- Gerado via JS -->
             </div>
@@ -368,30 +359,21 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
         let globalSessionsData = [];
         let globalConversionsData = [];
         let globalDealsData = [];
-        let modoCardsAtual = 'trafego'; // 'trafego' ou 'financeiro'
+        let modoCardsAtual = 'trafego';
 
-        // 1. Gerenciamento do Tema Automático em Tempo Real (Sistema)
         function escutarTemaDoSistema() {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            
             function aplicarTema(e) {
                 const manualOverride = localStorage.getItem('stats_theme_override');
                 if (!manualOverride) {
                     document.documentElement.classList.toggle('dark', e.matches);
                 }
             }
-
-            // Aplica no load inicial
             const manualOverride = localStorage.getItem('stats_theme_override');
-            if (manualOverride === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else if (manualOverride === 'light') {
-                document.documentElement.classList.remove('dark');
-            } else {
-                document.documentElement.classList.toggle('dark', mediaQuery.matches);
-            }
+            if (manualOverride === 'dark') document.documentElement.classList.add('dark');
+            else if (manualOverride === 'light') document.documentElement.classList.remove('dark');
+            else document.documentElement.classList.toggle('dark', mediaQuery.matches);
 
-            // Ouve mudanças do SO ao entardecer/amanhecer em tempo real
             mediaQuery.addEventListener('change', aplicarTema);
         }
 
@@ -405,9 +387,7 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
         document.addEventListener("DOMContentLoaded", () => {
             escutarTemaDoSistema();
             lucide.createIcons();
-            
             document.getElementById('input-data-fechamento').value = new Date().toISOString().split('T')[0];
-
             carregarDashboard();
 
             document.getElementById('period-filter').addEventListener('change', carregarDashboard);
@@ -415,7 +395,6 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             document.getElementById('theme-toggle').addEventListener('click', alternarTema);
         });
 
-        // Alternar Camada de Cards (Tráfego vs. Financeiro)
         function alternarModoCards() {
             modoCardsAtual = modoCardsAtual === 'trafego' ? 'financeiro' : 'trafego';
             const btnLabel = document.getElementById('label-toggle-cards');
@@ -423,13 +402,12 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             
             const container = document.getElementById('cards-container');
             container.classList.remove('fade-card');
-            void container.offsetWidth; // Força reflow para reiniciar animação
+            void container.offsetWidth;
             container.classList.add('fade-card');
 
             renderizarTopCards(globalSessionsData, globalConversionsData, globalDealsData);
         }
 
-        // Alternar Tabs do Bloco Principal
         function alternarTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('view-heatmap').classList.add('hidden');
@@ -517,11 +495,10 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             }
         }
 
-        // Renderização Alternável dos Top Cards (Tráfego vs Financeiro)
         function renderizarTopCards(sessions, conversions, deals) {
             const container = document.getElementById('cards-container');
             const totalVisitas = sessions.length;
-            const totalConversoes = conversions.length;
+            const totalConversoes = conversions.filter(c => c.package_name && c.package_name.indexOf('Visualizou') === -1).length;
             const totalDeals = deals.length;
 
             const taxaConversao = totalVisitas > 0 ? ((totalConversoes / totalVisitas) * 100).toFixed(1) : '0.0';
@@ -533,17 +510,47 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             const roasReal = faturamentoReal > 0 ? (faturamentoReal / gastoAds).toFixed(1) + 'x' : '0.0x';
             const ticketMedio = totalDeals > 0 ? (faturamentoReal / totalDeals) : (totalConversoes > 0 ? (orcamEstimado / totalConversoes) : 0);
 
+            // Média Real
+            const sessoesValidas = sessions.filter(s => Number(s.duration_seconds) > 0);
+            const totalSegundos = sessoesValidas.reduce((sum, s) => sum + Number(s.duration_seconds), 0);
+            const mediaSegundos = sessoesValidas.length > 0 ? Math.round(totalSegundos / sessoesValidas.length) : 0;
+            const minutos = Math.floor(mediaSegundos / 60);
+            const segundos = mediaSegundos % 60;
+            const tempoFormatado = mediaSegundos > 0 ? `${minutos}m ${segundos < 10 ? '0' : ''}${segundos}s` : '0m 00s';
+
+            // Cálculo das Origens do Período (Top 3)
+            const sourceCounts = {};
+            sessions.forEach(s => {
+                const src = s.source || 'Acesso Direto';
+                sourceCounts[src] = (sourceCounts[src] || 0) + 1;
+            });
+
+            const sortedSources = Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]);
+            const topSource = sortedSources.length > 0 ? sortedSources[0][0] : 'Acesso Direto';
+
+            let top3HTML = '';
+            sortedSources.slice(0, 3).forEach(([sourceName, count]) => {
+                const pct = Math.round((count / (totalVisitas || 1)) * 100);
+                top3HTML += `<div class="flex justify-between items-center text-[10px] text-muted-dynamic">
+                    <span class="truncate font-semibold">${sourceName}</span>
+                    <span class="font-bold text-champagne">${pct}%</span>
+                </div>`;
+            });
+
             if (modoCardsAtual === 'trafego') {
                 container.innerHTML = `
-                    <div class="card-custom p-5 rounded-2xl relative">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Total de Visitas</span>
-                            <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="users" class="w-5 h-5"></i></span>
+                    <!-- Card 1 Dobrado: Visitas + R$ Orçamentos -->
+                    <div class="card-custom p-5 rounded-2xl relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Total de Visitas</span>
+                                <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="users" class="w-5 h-5"></i></span>
+                            </div>
+                            <p class="text-2xl font-extrabold text-title-dynamic mt-2">${totalVisitas.toLocaleString('pt-BR')}</p>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">${totalVisitas.toLocaleString('pt-BR')}</p>
-                        <div class="flex items-center gap-1.5 text-champagne text-xs mt-3 font-bold">
-                            <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-                            <span>Acessos Únicos</span>
+                        <div class="pt-3 mt-3 border-t border-zinc-200 dark:border-darkBorder">
+                            <span class="text-[10px] font-bold text-muted-dynamic uppercase tracking-wider block">Orçamentos no Whats</span>
+                            <p class="text-sm font-extrabold text-emerald-500">R$ ${orcamEstimado.toLocaleString('pt-BR')},00</p>
                         </div>
                     </div>
 
@@ -569,14 +576,17 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
                         </div>
                     </div>
 
-                    <div class="card-custom p-5 rounded-2xl relative">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Principal Origem</span>
-                            <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="compass" class="w-5 h-5"></i></span>
+                    <!-- Card de Origens Dinâmico com Top 3 -->
+                    <div class="card-custom p-5 rounded-2xl relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Principal Origem</span>
+                                <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="compass" class="w-5 h-5"></i></span>
+                            </div>
+                            <p class="text-lg font-extrabold text-title-dynamic mt-2 truncate">${topSource}</p>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3 truncate">Google Ads</p>
-                        <div class="flex items-center gap-1.5 text-champagne text-xs mt-3 font-bold">
-                            <span>65% do tráfego pago</span>
+                        <div class="pt-2 mt-2 border-t border-zinc-200 dark:border-darkBorder space-y-1">
+                            ${top3HTML}
                         </div>
                     </div>
 
@@ -585,9 +595,9 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
                             <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Permanência Média</span>
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="clock" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">2m 18s</p>
+                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">${tempoFormatado}</p>
                         <div class="flex items-center gap-1.5 text-champagne text-xs mt-3 font-bold">
-                            <span>Tempo de engajamento</span>
+                            <span>Tempo de engajamento real</span>
                         </div>
                     </div>
                 `;
@@ -700,7 +710,12 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             const container = document.getElementById('live-feed-container');
             container.innerHTML = '';
 
-            const convertedSessionIds = new Set(conversions.map(c => c.session_id));
+            const convertedSessionIds = new Set(
+                conversions
+                    .filter(c => c.package_name && c.package_name.indexOf('Visualizou') === -1)
+                    .map(c => c.session_id)
+            );
+
             const recentSessions = sessions.slice(0, 6);
 
             if (recentSessions.length === 0) {
@@ -711,7 +726,7 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             recentSessions.forEach(s => {
                 const converted = convertedSessionIds.has(s.id);
                 const city = nomeCidadeReal(s);
-                const device = s.device || 'Mobile (iPhone)';
+                const device = s.device || 'Mobile';
                 const hora = formatarHora(s.created_at);
 
                 const statusTag = converted 
@@ -734,11 +749,11 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
                         </div>
                         <p class="text-[11px] text-muted-dynamic mb-2 font-semibold flex justify-between items-center">
                             <span>📱 ${device}</span>
-                            <span class="text-champagne font-bold opacity-0 group-hover:opacity-100 transition text-[10px]">Ver Trajeto N Passos →</span>
+                            <span class="text-champagne font-bold opacity-0 group-hover:opacity-100 transition text-[10px]">Ver Detalhes →</span>
                         </p>
                         
                         <div class="bg-white dark:bg-darkCard p-2 rounded border border-zinc-200 dark:border-darkBorder text-[11px] font-mono text-title-dynamic space-y-1">
-                            <p class="text-amber-800 dark:text-amber-200 font-semibold truncate">1. Entrou na Home $\rightarrow$ Analisou Estate</p>
+                            <p class="text-amber-800 dark:text-amber-200 font-semibold truncate">Fonte: ${s.source || 'Acesso Direto'}</p>
                         </div>
                     </div>
                 `;
@@ -826,7 +841,7 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
         function renderizarFunilEtapas(sessions, conversions, deals) {
             const container = document.getElementById('funnel-container');
             const totVisitas = sessions.length || 1;
-            const totConversoes = conversions.length;
+            const totConversoes = conversions.filter(c => c.package_name && c.package_name.indexOf('Visualizou') === -1).length;
             const totDeals = deals.length;
 
             const p2 = Math.round((totConversoes / totVisitas) * 100);
@@ -865,7 +880,6 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             `;
         }
 
-        // Gráfico de Auréola (Donut Chart) para Origens de Tráfego
         function renderizarGraficoOrigens(sessions) {
             const ctx = document.getElementById('sourcesChart').getContext('2d');
             if (sourcesChartInstance) sourcesChartInstance.destroy();
@@ -881,8 +895,8 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             sessions.forEach(s => {
                 const src = (s.source || '').toLowerCase();
                 if (src.includes('google')) googleCount++;
-                else if (src.includes('instagram') || src.includes('meta')) instagramCount++;
-                else if (src.includes('direct') || src === '') diretoCount++;
+                else if (src.includes('meta') || src.includes('instagram')) instagramCount++;
+                else if (src.includes('direto') || src === '') diretoCount++;
                 else outrosCount++;
             });
 
@@ -913,37 +927,52 @@ HISTÓRICO RECENTE DAS ÚLTIMAS VERSÕES:
             });
         }
 
+        // Modal com Trajeto Limpo
         function abrirModalJourney(sessionId) {
             const session = globalSessionsData.find(s => s.id === sessionId);
             if (!session) return;
 
+            const origemFormatada = session.source || 'Acesso Direto';
+            const userEvents = globalConversionsData.filter(c => c.session_id === sessionId);
+
             document.getElementById('modal-session-title').innerText = `Visita em ${nomeCidadeReal(session)}`;
-            document.getElementById('modal-session-subtitle').innerText = `${session.device || 'Mobile'} • Origem: ${session.source || 'Google Ads'}`;
+            document.getElementById('modal-session-subtitle').innerText = `${session.device || 'Mobile'} • Origem: ${origemFormatada}`;
             
-            document.getElementById('modal-time-total').innerText = `${session.time_total || 134} seg`;
-            document.getElementById('modal-keyword').innerText = session.utm_term || 'banda de eventos luxo';
-            document.getElementById('modal-ad').innerText = session.utm_content || 'Anúncio Pocket Session - Vídeo 01';
+            document.getElementById('modal-time-total').innerText = `${session.duration_seconds || 0} seg`;
+            document.getElementById('modal-ad').innerText = (session.campaign && session.campaign !== 'none' ? session.campaign : 'Geral') + ' / ' + (session.medium && session.medium !== 'none' ? session.medium : 'Sem Termo');
 
             const stepsList = document.getElementById('modal-steps-list');
-            stepsList.innerHTML = `
+            
+            let htmlSteps = `
                 <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 border-l-champagne">
-                    <p class="font-bold text-title-dynamic">Passo 1: Entrou na Página Inicial</p>
-                    <p class="text-[10px] text-muted-dynamic">Tempo de Permanência: 15s • Visualizou Hero Banner</p>
-                </div>
-                <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 border-l-champagne">
-                    <p class="font-bold text-title-dynamic">Passo 2: Navegou até Pocket Session</p>
-                    <p class="text-[10px] text-muted-dynamic">Tempo de Permanência: ${session.time_pocket || 25}s • Tocou o vídeo demonstrativo</p>
-                </div>
-                <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 border-l-champagne">
-                    <p class="font-bold text-title-dynamic">Passo 3: Usou a Calculadora de Simulação</p>
-                    <p class="text-[10px] text-muted-dynamic">Tempo de Permanência: 40s • Selecionou Formato Estate</p>
-                </div>
-                <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 border-l-emerald-500">
-                    <p class="font-bold text-emerald-500">Passo 4: Clicou no botão de Reserva WhatsApp</p>
-                    <p class="text-[10px] text-muted-dynamic">Status: Mensagem pré-formatada enviada</p>
+                    <p class="font-bold text-title-dynamic">Passo 1: Entrou no site via ${origemFormatada}</p>
+                    <p class="text-[10px] text-muted-dynamic">Página Principal • Dispositivo: ${session.device || 'Mobile'}</p>
                 </div>
             `;
 
+            if (userEvents.length > 0) {
+                userEvents.reverse().forEach((ev, idx) => {
+                    const isConversion = ev.estimated_value > 0;
+                    const borderCol = isConversion ? 'border-l-emerald-500' : 'border-l-champagne';
+                    const textCol = isConversion ? 'text-emerald-500 font-bold' : 'text-title-dynamic font-bold';
+
+                    htmlSteps += `
+                        <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 ${borderCol}">
+                            <p class="${textCol}">Passo ${idx + 2}: ${ev.package_name}</p>
+                            <p class="text-[10px] text-muted-dynamic">${isConversion ? 'Clique de Conversão no WhatsApp (R$ ' + ev.estimated_value + ')' : 'Navegação por Seção'}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                htmlSteps += `
+                    <div class="p-2.5 bg-inner-dynamic rounded-lg border-l-2 border-l-champagne">
+                        <p class="font-bold text-title-dynamic">Passo 2: Permanência Ativa</p>
+                        <p class="text-[10px] text-muted-dynamic">Tempo de Leitura Registrado: ${session.duration_seconds || 0}s</p>
+                    </div>
+                `;
+            }
+
+            stepsList.innerHTML = htmlSteps;
             document.getElementById('modal-journey').classList.remove('hidden');
         }
 

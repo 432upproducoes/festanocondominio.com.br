@@ -1,0 +1,180 @@
+/* ====================================================================
+   ESTILOS PERSONALIZADOS — FESTA NO CONDOMÍNIO
+   ==================================================================== */
+
+/* Configuração Geral do Corpo */
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: #FAF9F6;
+    color: #1C1814;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    user-select: none; /* Trava visual contra seleção acidental de texto */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+html.dark body {
+    background-color: #0F0D0B;
+    color: #FAF9F6;
+}
+
+/* Configurações do Tailwind via CSS Variables */
+:root {
+    --color-champagne: #D4B068;
+    --color-champagne-hover: #C29D55;
+    --color-offwhite: #FAF9F6;
+    --color-dark-espresso: #1C1814;
+    --color-body-text: #3F3F46;
+    --color-muted-text: #71717A;
+    --color-card-bg: #FFFFFF;
+    --color-dark-card-bg: #1A1511;
+    --color-subtle-border: #E4E4E7;
+    --color-dark-subtle-border: #382D24;
+}
+
+/* Animações Flutuantes e Cênicas */
+@keyframes tideBreathing {
+    0%, 100% { 
+        transform: translateY(0px); 
+        border-color: rgba(212, 176, 104, 0.35); 
+        box-shadow: 0 20px 45px rgba(28, 24, 20, 0.12); 
+    }
+    50% { 
+        transform: translateY(-2.5px); 
+        border-color: rgba(212, 176, 104, 0.60); 
+        box-shadow: 0 25px 55px rgba(212, 176, 104, 0.18); 
+    }
+}
+
+@keyframes cardTide {
+    0%, 100% { 
+        transform: translateY(0px); 
+        border-color: rgba(228, 228, 231, 0.9); 
+    }
+    50% { 
+        transform: translateY(-2px); 
+        border-color: rgba(212, 176, 104, 0.45); 
+    }
+}
+
+@keyframes floatOrb1 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    50% { transform: translate(80px, -60px) scale(1.2); }
+}
+
+@keyframes floatOrb2 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    50% { transform: translate(-70px, 70px) scale(1.25); }
+}
+
+/* Efeito Glassmorphism do Cabeçalho */
+.header-glass {
+    background-color: rgba(250, 249, 246, 0.75);
+    backdrop-filter: blur(16px) brightness(1.02);
+    -webkit-backdrop-filter: blur(16px) brightness(1.02);
+}
+
+html.dark .header-glass {
+    background-color: rgba(15, 13, 11, 0.45);
+    backdrop-filter: blur(16px) brightness(1.05);
+    -webkit-backdrop-filter: blur(16px) brightness(1.05);
+}
+
+/* Hero Section Overlay */
+.hero-amber-overlay {
+    background: linear-gradient(135deg, rgba(250, 243, 230, 0.85) 0%, rgba(243, 232, 211, 0.78) 100%);
+    backdrop-filter: blur(16px) brightness(1.05);
+    -webkit-backdrop-filter: blur(16px) brightness(1.05);
+    animation: tideBreathing 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    border: 1px solid rgba(212, 176, 104, 0.35);
+}
+
+html.dark .hero-amber-overlay {
+    background: linear-gradient(135deg, rgba(28, 24, 20, 0.45) 0%, rgba(212, 176, 104, 0.20) 100%);
+    backdrop-filter: blur(18px) brightness(1.05);
+    -webkit-backdrop-filter: blur(18px) brightness(1.05);
+    border: 1px solid rgba(212, 176, 104, 0.25);
+}
+
+/* Textos Degradê */
+.text-offwhite-to-champagne {
+    background: linear-gradient(135deg, #1C1814 0%, #4A3B24 40%, #D4B068 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.8));
+}
+
+html.dark .text-offwhite-to-champagne {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F5EBE0 30%, #D4B068 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 2px rgba(28, 24, 20, 0.4));
+}
+
+.hero-title-dark { color: #1C1814; }
+html.dark .hero-title-dark { color: #F3E8D3; }
+
+/* Cadência das Animações dos Cards */
+.card-tide-1 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.card-tide-2 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.8s; }
+.card-tide-3 { animation: cardTide 7.5s cubic-bezier(0.4, 0, 0.2, 1) infinite 3.6s; }
+
+/* Destaque Penthouse/Estate */
+.penthouse-highlight {
+    border: 2px solid #D4B068;
+    box-shadow: 0 10px 30px rgba(212, 176, 104, 0.25);
+}
+
+.logo-ape-suave { color: #D4B068; }
+
+/* Animação do FAQ */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 300px;
+    opacity: 1;
+    padding-top: 0.875rem;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+    color: #D4B068;
+}
+
+/* Orbes de Iluminação Cênica ao Fundo */
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
+    transition: opacity 0.5s ease;
+}
+
+html.dark .bg-orb { opacity: 0.35; }
+
+.orb-champagne {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #D4B068 0%, rgba(212, 176, 104, 0) 70%);
+    top: 10%;
+    left: -100px;
+    animation: floatOrb1 18s ease-in-out infinite;
+}
+
+.orb-amber {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #92400E 0%, rgba(146, 64, 14, 0) 70%);
+    bottom: 5%;
+    right: -120px;
+    animation: floatOrb2 22s ease-in-out infinite;
+}

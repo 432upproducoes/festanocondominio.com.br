@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Bloqueia a página de estatísticas/painel para não aparecer nos resultados do Google
+Disallow: /stats.html
+
+# Aponta a localização do Sitemap
+Sitemap: https://festanocondominio.com.br/sitemap.xml
