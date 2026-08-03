@@ -1,14 +1,26 @@
-# Forçar HTTPS e WWW/Non-WWW com segurança
+# ==========================================
+# REDIRECIONAMENTO E PADRONIZAÇÃO DE URL
+# ==========================================
 RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Ativar Compressão GZIP para deixar o site ultra rápido
+# 1. Se acessar com WWW, redireciona para a versão sem WWW com HTTPS
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# 2. Se acessar via HTTP (sem segurança), redireciona para HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ==========================================
+# ATIVAR COMPRESSÃO GZIP (SITE ULTRA RÁPIDO)
+# ==========================================
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
 </IfModule>
 
-# Cache de Navegador para Imagens e Fontes
+# ==========================================
+# CACHE DE NAVEGADOR (IMAGENS E FONTES)
+# ==========================================
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType image/webp "access plus 1 year"
