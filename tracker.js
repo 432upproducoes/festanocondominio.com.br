@@ -2,11 +2,37 @@
 ;(function() {
     'use strict';
 
-    function isBot() {
+    // ITEM 5 do plano: lista ampliada de assinaturas de bot/crawler no user-agent.
+    // Antes, sessões que passavam por essa checagem eram sempre gravadas como
+    // is_bot:false (nunca true), fazendo o checkbox "Ocultar Bots" do dashboard
+    // não ter efeito prático nenhum. Agora, mesmo que a sessão seja gravada
+    // (não bloqueada aqui), o campo is_bot reflete o resultado real da checagem.
+    function isBotUserAgent() {
         var ua = (navigator.userAgent || '').toLowerCase();
-        return /bot|crawler|spider|slurp|googlebot|bingbot|headless|lighthouse|pagespeed/.test(ua);
+        return /bot|crawler|spider|slurp|googlebot|bingbot|headless|lighthouse|pagespeed|duckduckbot|baiduspider|yandexbot|semrushbot|ahrefsbot|mj12bot|dotbot|petalbot|bytespider|gptbot|ccbot|facebookexternalhit|whatsapp|telegrambot|discordbot|phantomjs|puppeteer|playwright|selenium/.test(ua);
     }
-    if (isBot()) return;
+
+    // Heurística adicional além do user-agent: navigator.webdriver é setado por
+    // navegadores automatizados (Selenium/Puppeteer/Playwright), e a ausência total
+    // de plugins/idiomas é outro sinal comum de headless/bot que não se anuncia no UA.
+    function pareceAutomatizado() {
+        try {
+            if (navigator.webdriver === true) return true;
+            if (Array.isArray(navigator.languages) && navigator.languages.length === 0) return true;
+        } catch (e) {}
+        return false;
+    }
+
+    function isBot() {
+        return isBotUserAgent() || pareceAutomatizado();
+    }
+
+    var detectedAsBot = isBot();
+
+    // Bots claramente identificados por user-agent continuam sendo bloqueados
+    // por completo (nem grava sessão) — mantém o comportamento original para
+    // os casos óbvios, poupando escrita no banco.
+    if (isBotUserAgent()) return;
     try { if (window.self !== window.top) return; } catch(e) { return; }
 
     var SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
@@ -89,7 +115,10 @@
         id: visitId,
         city: 'Bragança Paulista',
         region: 'SP',
-        is_bot: false,
+        // ITEM 5 do plano: antes sempre 'false'. Agora reflete a heurística real
+        // (navigator.webdriver / ausência de idiomas), permitindo que o checkbox
+        // "Ocultar Bots" do dashboard tenha efeito de fato sobre esses casos.
+        is_bot: detectedAsBot,
         source: utmSource,
         medium: utmTerm,
         campaign: utmCampaign,
