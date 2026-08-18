@@ -151,6 +151,12 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
                 <span>+ Gasto Ads</span>
             </button>
 
+            <!-- Botão Registros -->
+            <button onclick="abrirModalRegistros()" class="card-custom text-champagne font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 hover:border-champagne/60 transition shadow-sm cursor-pointer">
+                <i data-lucide="list-checks" class="w-4 h-4"></i>
+                <span>Registros</span>
+            </button>
+
             <!-- Atualizar -->
             <button onclick="carregarDashboard()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne cursor-pointer">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
@@ -445,6 +451,121 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
         </div>
     </div>
 
+    <!-- MODAL: REGISTROS (Vendas & Ads) -->
+    <div id="modal-registros" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-2xl w-full p-6 rounded-2xl relative shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center pb-4 mb-4 border-b border-zinc-200 dark:border-darkBorder">
+                <h3 class="text-lg font-extrabold text-title-dynamic flex items-center gap-2">
+                    <i data-lucide="list-checks" class="w-5 h-5 text-champagne"></i>
+                    Registros: Vendas &amp; Investimento em Ads
+                </h3>
+                <button onclick="fecharModalRegistros()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center bg-zinc-200 dark:bg-darkBorder p-1 rounded-xl text-xs font-bold gap-1 mb-4">
+                <button onclick="alternarTabRegistros('vendas')" id="tab-reg-vendas" class="tab-btn active px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 justify-center cursor-pointer">
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                    <span>Vendas Fechadas</span>
+                </button>
+                <button onclick="alternarTabRegistros('ads')" id="tab-reg-ads" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 justify-center cursor-pointer">
+                    <i data-lucide="target" class="w-3.5 h-3.5"></i>
+                    <span>Gastos em Ads</span>
+                </button>
+            </div>
+
+            <div id="registros-error" class="hidden text-xs font-bold text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-xl p-3 mb-3"></div>
+
+            <div class="overflow-y-auto custom-scrollbar flex-1 space-y-3">
+                <div id="registros-lista-vendas" class="space-y-2.5"></div>
+                <div id="registros-lista-ads" class="space-y-2.5 hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR REGISTRO (Venda ou Ad) -->
+    <div id="modal-editar-registro" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-sm w-full p-6 rounded-2xl relative shadow-2xl">
+            <div class="flex justify-between items-center pb-4 mb-4 border-b border-zinc-200 dark:border-darkBorder">
+                <h3 id="editar-registro-titulo" class="text-base font-extrabold text-title-dynamic flex items-center gap-2">
+                    <i data-lucide="pencil" class="w-4 h-4 text-champagne"></i>
+                    Editar Registro
+                </h3>
+                <button onclick="fecharModalEditarRegistro()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="form-editar-registro" onsubmit="salvarEdicaoRegistro(event)" class="space-y-4">
+                <input type="hidden" id="editar-registro-id">
+                <input type="hidden" id="editar-registro-tipo">
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Data *</label>
+                    <input type="date" id="editar-registro-data" required class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label id="editar-registro-valor-label" class="block text-xs font-bold text-title-dynamic mb-1">Valor (R$) *</label>
+                    <input type="number" step="0.01" id="editar-registro-valor" required class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div id="editar-registro-extra-venda" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-title-dynamic mb-1">Nome do Cliente / Condomínio</label>
+                        <input type="text" id="editar-registro-cliente" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-title-dynamic mb-1">Pacote Contratado</label>
+                        <select id="editar-registro-pacote" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                            <option value="Festa no Condomínio">Festa no Condomínio</option>
+                            <option value="Festa no Apê">Festa no Apê</option>
+                            <option value="Pocket Show Executivo">Pocket Show Executivo</option>
+                            <option value="Estate Session">Estate Session</option>
+                            <option value="Pocket Session">Pocket Session</option>
+                            <option value="Sonorização & Iluminação">Sonorização &amp; Iluminação</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="editar-registro-extra-ads" class="hidden">
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Observações</label>
+                    <input type="text" id="editar-registro-notas" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div id="editar-registro-error" class="hidden text-xs font-bold text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-xl p-3"></div>
+
+                <div class="pt-2 flex justify-between gap-3">
+                    <button type="button" onclick="excluirRegistroAtual()" class="px-4 py-2 rounded-xl text-xs font-bold text-rose-500 hover:bg-rose-500/10 transition flex items-center gap-1.5">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        Excluir
+                    </button>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="fecharModalEditarRegistro()" class="px-4 py-2 rounded-xl text-xs font-bold text-muted-dynamic hover:bg-zinc-200 dark:hover:bg-darkBorder transition">Cancelar</button>
+                        <button type="submit" id="btn-save-edicao" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-extrabold text-xs px-5 py-2 rounded-xl flex items-center gap-2 transition shadow-lg cursor-pointer">
+                            <span>Salvar</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div id="modal-confirmar-exclusao" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[70] flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-xs w-full p-6 rounded-2xl relative shadow-2xl text-center">
+            <i data-lucide="alert-triangle" class="w-8 h-8 text-rose-500 mx-auto mb-3"></i>
+            <h3 class="text-sm font-extrabold text-title-dynamic mb-2">Excluir este registro?</h3>
+            <p class="text-xs text-muted-dynamic font-semibold mb-5">Essa ação não pode ser desfeita.</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="fecharModalConfirmarExclusao()" class="px-4 py-2 rounded-xl text-xs font-bold text-muted-dynamic hover:bg-zinc-200 dark:hover:bg-darkBorder transition">Cancelar</button>
+                <button onclick="confirmarExclusaoRegistro()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs px-5 py-2 rounded-xl transition shadow-lg cursor-pointer">Sim, excluir</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: INSPECTOR DE JORNADA DE SESSÃO -->
     <div id="modal-inspector" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 fade-card">
         <div class="card-custom max-w-lg w-full p-6 rounded-2xl relative shadow-2xl max-h-[85vh] flex flex-col justify-between">
@@ -455,6 +576,7 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
                             <i data-lucide="footprints" class="w-5 h-5 text-champagne"></i>
                             Jornada Transparente do Usuário
                         </h3>
+                        <p id="inspector-session-label" class="text-xs text-amber-700 dark:text-champagne font-bold mt-1">-</p>
                         <p id="inspector-session-id" class="text-[10px] text-muted-dynamic font-mono mt-0.5">Sessão: -</p>
                     </div>
                     <button onclick="fecharModalInspector()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
@@ -462,14 +584,14 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
                     </button>
                 </div>
 
-                <div id="inspector-meta" class="grid grid-cols-2 gap-3 mb-4 text-xs font-mono">
-                    <div class="p-2.5 bg-inner-dynamic rounded-lg">
+                <div id="inspector-meta" class="grid grid-cols-5 gap-3 mb-4 text-xs font-mono">
+                    <div class="col-span-2 p-2.5 bg-inner-dynamic rounded-lg">
                         <span class="text-muted-dynamic block text-[10px]">Tempo de Permanência:</span>
                         <strong id="inspector-duration" class="text-amber-700 dark:text-champagne">-</strong>
                     </div>
-                    <div class="p-2.5 bg-inner-dynamic rounded-lg">
+                    <div class="col-span-3 p-2.5 bg-inner-dynamic rounded-lg overflow-hidden">
                         <span class="text-muted-dynamic block text-[10px]">Origem / Campanha:</span>
-                        <strong id="inspector-source" class="text-title-dynamic truncate block">-</strong>
+                        <strong id="inspector-source" class="text-title-dynamic block break-words leading-snug">-</strong>
                     </div>
                 </div>
 
@@ -499,6 +621,8 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
         let globalDealsData = [];
         let globalAdSpendData = [];
         let modoCardsAtual = 'trafego';
+        let tabRegistrosAtual = 'vendas';
+        let registroExclusaoPendente = null; // { id, tipo }
 
         function escutarTemaDoSistema() {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -630,6 +754,10 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
                 if (!resAdSpend.ok) throw new Error('Falha ao buscar gastos de ads (con_ad_spend)');
                 let adSpend = await resAdSpend.json();
 
+                // NOTA (item 5 do plano): o tracker público hoje sempre grava is_bot:false,
+                // então esse filtro so tera efeito pratico quando a deteccao no tracker.js
+                // passar a gravar is_bot:true para os casos identificados. Mantido aqui
+                // para já funcionar automaticamente assim que isso for corrigido na origem.
                 if (ocultarBots) {
                     sessions = sessions.filter(s => s.is_bot !== true);
                 }
@@ -919,6 +1047,12 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
             return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         }
 
+        function formatarDataCurta(isoString) {
+            if (!isoString) return '';
+            const d = new Date(isoString);
+            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        }
+
         function renderizarLiveFeed(sessions, conversions) {
             const container = document.getElementById('live-feed-container');
             const countBadge = document.getElementById('live-feed-count');
@@ -1200,7 +1334,7 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
             });
         }
 
-        // --- MODAIS ---
+        // --- MODAIS DE CRIAÇÃO ---
         function abrirModalFechamento() {
             document.getElementById('fechamento-error').classList.add('hidden');
             document.getElementById('modal-fechamento').classList.remove('hidden');
@@ -1314,12 +1448,300 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
             }
         }
 
+        // --- MODAL DE REGISTROS (listar / editar / excluir Vendas e Ads) ---
+
+        function abrirModalRegistros() {
+            document.getElementById('registros-error').classList.add('hidden');
+            tabRegistrosAtual = 'vendas';
+            document.querySelectorAll('#tab-reg-vendas, #tab-reg-ads').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-reg-vendas').classList.add('active');
+            document.getElementById('registros-lista-vendas').classList.remove('hidden');
+            document.getElementById('registros-lista-ads').classList.add('hidden');
+            renderizarListaRegistros();
+            document.getElementById('modal-registros').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function fecharModalRegistros() {
+            document.getElementById('modal-registros').classList.add('hidden');
+        }
+
+        function alternarTabRegistros(tab) {
+            tabRegistrosAtual = tab;
+            document.querySelectorAll('#tab-reg-vendas, #tab-reg-ads').forEach(b => b.classList.remove('active'));
+            document.getElementById('registros-lista-vendas').classList.add('hidden');
+            document.getElementById('registros-lista-ads').classList.add('hidden');
+
+            if (tab === 'vendas') {
+                document.getElementById('tab-reg-vendas').classList.add('active');
+                document.getElementById('registros-lista-vendas').classList.remove('hidden');
+            } else {
+                document.getElementById('tab-reg-ads').classList.add('active');
+                document.getElementById('registros-lista-ads').classList.remove('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        function agruparRegistrosPorDia(registros, campoData) {
+            const grupos = {};
+            registros.forEach(r => {
+                const dia = (r[campoData] || '').split('T')[0];
+                if (!grupos[dia]) grupos[dia] = [];
+                grupos[dia].push(r);
+            });
+            return Object.keys(grupos).sort((a, b) => b.localeCompare(a)).map(dia => ({ dia, itens: grupos[dia] }));
+        }
+
+        function formatarDataLonga(diaISO) {
+            if (!diaISO) return 'Data não informada';
+            const [ano, mes, dia] = diaISO.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function renderizarListaRegistros() {
+            // Vendas
+            const listaVendas = document.getElementById('registros-lista-vendas');
+            if (globalDealsData.length === 0) {
+                listaVendas.innerHTML = '<p class="empty-state">Nenhuma venda registrada no período selecionado no filtro principal.</p>';
+            } else {
+                const gruposVendas = agruparRegistrosPorDia(globalDealsData, 'created_at');
+                listaVendas.innerHTML = gruposVendas.map(grupo => {
+                    const totalDia = grupo.itens.reduce((s, d) => s + Number(d.deal_value || 0), 0);
+                    const itensHTML = grupo.itens.map(d => `
+                        <div onclick="abrirModalEditarRegistro('venda', '${d.id}')" class="p-3 bg-inner-dynamic border border-zinc-200 dark:border-darkBorder rounded-xl flex justify-between items-center cursor-pointer hover:border-champagne/60 transition">
+                            <div>
+                                <p class="text-xs font-bold text-title-dynamic">${d.client_name || 'Cliente não informado'}</p>
+                                <p class="text-[10px] text-muted-dynamic font-semibold">${d.package_name || 'Pacote não informado'}</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-extrabold text-emerald-500 font-mono">R$ ${Number(d.deal_value || 0).toLocaleString('pt-BR')},00</span>
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-champagne"></i>
+                            </div>
+                        </div>
+                    `).join('');
+                    return `
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5 px-0.5">
+                                <span class="text-[10px] font-extrabold text-muted-dynamic uppercase tracking-wider">${formatarDataLonga(grupo.dia)}</span>
+                                <span class="text-[10px] font-extrabold text-emerald-500 font-mono">Total: R$ ${totalDia.toLocaleString('pt-BR')},00</span>
+                            </div>
+                            <div class="space-y-2">${itensHTML}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Ads
+            const listaAds = document.getElementById('registros-lista-ads');
+            if (globalAdSpendData.length === 0) {
+                listaAds.innerHTML = '<p class="empty-state">Nenhum gasto de ads registrado no período selecionado no filtro principal.</p>';
+            } else {
+                const gruposAds = agruparRegistrosPorDia(globalAdSpendData, 'spend_date');
+                listaAds.innerHTML = gruposAds.map(grupo => {
+                    const totalDia = grupo.itens.reduce((s, a) => s + Number(a.amount || 0), 0);
+                    const itensHTML = grupo.itens.map(a => `
+                        <div onclick="abrirModalEditarRegistro('ad', '${a.id}')" class="p-3 bg-inner-dynamic border border-zinc-200 dark:border-darkBorder rounded-xl flex justify-between items-center cursor-pointer hover:border-champagne/60 transition">
+                            <div>
+                                <p class="text-xs font-bold text-title-dynamic">${a.notes || 'Sem observações'}</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-extrabold text-champagne font-mono">R$ ${Number(a.amount || 0).toLocaleString('pt-BR')},00</span>
+                                <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-champagne"></i>
+                            </div>
+                        </div>
+                    `).join('');
+                    return `
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5 px-0.5">
+                                <span class="text-[10px] font-extrabold text-muted-dynamic uppercase tracking-wider">${formatarDataLonga(grupo.dia)}</span>
+                                <span class="text-[10px] font-extrabold text-champagne font-mono">Total: R$ ${totalDia.toLocaleString('pt-BR')},00</span>
+                            </div>
+                            <div class="space-y-2">${itensHTML}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            lucide.createIcons();
+        }
+
+        function abrirModalEditarRegistro(tipo, id) {
+            document.getElementById('editar-registro-error').classList.add('hidden');
+            document.getElementById('editar-registro-id').value = id;
+            document.getElementById('editar-registro-tipo').value = tipo;
+
+            const extraVenda = document.getElementById('editar-registro-extra-venda');
+            const extraAds = document.getElementById('editar-registro-extra-ads');
+            const valorLabel = document.getElementById('editar-registro-valor-label');
+            const titulo = document.getElementById('editar-registro-titulo');
+
+            if (tipo === 'venda') {
+                const item = globalDealsData.find(d => String(d.id) === String(id));
+                if (!item) return;
+                titulo.innerHTML = '<i data-lucide="pencil" class="w-4 h-4 text-champagne"></i> Editar Venda';
+                valorLabel.innerText = 'Valor do Contrato (R$) *';
+                document.getElementById('editar-registro-data').value = (item.created_at || '').split('T')[0];
+                document.getElementById('editar-registro-valor').value = item.deal_value || '';
+                document.getElementById('editar-registro-cliente').value = item.client_name || '';
+                document.getElementById('editar-registro-pacote').value = item.package_name || 'Festa no Condomínio';
+                extraVenda.classList.remove('hidden');
+                extraAds.classList.add('hidden');
+            } else {
+                const item = globalAdSpendData.find(a => String(a.id) === String(id));
+                if (!item) return;
+                titulo.innerHTML = '<i data-lucide="pencil" class="w-4 h-4 text-champagne"></i> Editar Gasto em Ads';
+                valorLabel.innerText = 'Valor Investido (R$) *';
+                document.getElementById('editar-registro-data').value = item.spend_date || '';
+                document.getElementById('editar-registro-valor').value = item.amount || '';
+                document.getElementById('editar-registro-notas').value = item.notes || '';
+                extraVenda.classList.add('hidden');
+                extraAds.classList.remove('hidden');
+            }
+
+            document.getElementById('modal-editar-registro').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function fecharModalEditarRegistro() {
+            document.getElementById('modal-editar-registro').classList.add('hidden');
+        }
+
+        async function salvarEdicaoRegistro(event) {
+            event.preventDefault();
+            const btnSave = document.getElementById('btn-save-edicao');
+            const errorBox = document.getElementById('editar-registro-error');
+            errorBox.classList.add('hidden');
+            btnSave.disabled = true;
+            btnSave.innerHTML = '<span>Salvando...</span>';
+
+            const id = document.getElementById('editar-registro-id').value;
+            const tipo = document.getElementById('editar-registro-tipo').value;
+            const dataValor = document.getElementById('editar-registro-data').value;
+            const valor = parseFloat(document.getElementById('editar-registro-valor').value);
+
+            try {
+                let res;
+                if (tipo === 'venda') {
+                    const payload = {
+                        deal_value: valor,
+                        client_name: document.getElementById('editar-registro-cliente').value.trim() || null,
+                        package_name: document.getElementById('editar-registro-pacote').value,
+                        created_at: new Date(dataValor + 'T12:00:00').toISOString()
+                    };
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/con_deals?id=eq.${id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    const payload = {
+                        amount: valor,
+                        spend_date: dataValor,
+                        notes: document.getElementById('editar-registro-notas').value.trim() || null
+                    };
+                    res = await fetch(`${SUPABASE_URL}/rest/v1/con_ad_spend?id=eq.${id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (res.ok) {
+                    fecharModalEditarRegistro();
+                    await carregarDashboard();
+                    renderizarListaRegistros();
+                } else {
+                    const errText = await res.text();
+                    errorBox.innerText = `Erro ao salvar (${res.status}): ${errText}`;
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorBox.innerText = `Erro de conexão: ${err.message}`;
+                errorBox.classList.remove('hidden');
+            } finally {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<span>Salvar</span>';
+            }
+        }
+
+        function excluirRegistroAtual() {
+            const id = document.getElementById('editar-registro-id').value;
+            const tipo = document.getElementById('editar-registro-tipo').value;
+            registroExclusaoPendente = { id, tipo };
+            document.getElementById('modal-confirmar-exclusao').classList.remove('hidden');
+        }
+
+        function fecharModalConfirmarExclusao() {
+            registroExclusaoPendente = null;
+            document.getElementById('modal-confirmar-exclusao').classList.add('hidden');
+        }
+
+        async function confirmarExclusaoRegistro() {
+            if (!registroExclusaoPendente) return;
+            const { id, tipo } = registroExclusaoPendente;
+            const tabela = tipo === 'venda' ? 'con_deals' : 'con_ad_spend';
+            const errorBox = document.getElementById('editar-registro-error');
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${tabela}?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Prefer': 'return=minimal'
+                    }
+                });
+
+                if (res.ok) {
+                    fecharModalConfirmarExclusao();
+                    fecharModalEditarRegistro();
+                    await carregarDashboard();
+                    renderizarListaRegistros();
+                } else {
+                    const errText = await res.text();
+                    fecharModalConfirmarExclusao();
+                    errorBox.innerText = `Erro ao excluir (${res.status}): ${errText}`;
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                fecharModalConfirmarExclusao();
+                errorBox.innerText = `Erro de conexão: ${err.message}`;
+                errorBox.classList.remove('hidden');
+            }
+        }
+
+        // --- INSPECTOR DE SESSÃO ---
+
+        function rotularEvento(packageName) {
+            if (!packageName) return 'Evento do Usuário';
+            if (packageName.indexOf('Visualizou') > -1) return packageName;
+            // Item 3 do plano: deixar claro que esses eventos são cliques reais no WhatsApp
+            return `Clicou no WhatsApp (${packageName})`;
+        }
+
         function abrirInspectorSessao(sessionId) {
             const modal = document.getElementById('modal-inspector');
             const container = document.getElementById('inspector-events-container');
             const session = globalSessionsData.find(s => s.id === sessionId);
 
-            document.getElementById('inspector-session-id').innerText = `ID da Sessão: ${sessionId}`;
+            // Item 4 do plano: resumo legível no lugar do ID técnico como destaque
+            const cidade = session ? nomeCidadeReal(session) : 'Sessão';
+            const horaCriacao = session ? formatarHora(session.created_at) : '';
+            document.getElementById('inspector-session-label').innerText = session
+                ? `${cidade} • ${horaCriacao}`
+                : 'Sessão não encontrada';
+            document.getElementById('inspector-session-id').innerText = `ID técnico: ${sessionId}`;
+
             document.getElementById('inspector-duration').innerText = session && session.duration_seconds ? `${session.duration_seconds} seg` : 'Sem dado';
             document.getElementById('inspector-source').innerText = session
                 ? `${session.source || 'Acesso Direto'} ${session.campaign && session.campaign !== 'none' ? '/ ' + session.campaign : ''}`
@@ -1339,13 +1761,14 @@ VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed 
                     const hora = formatarHora(ev.created_at);
                     const isConversion = ev.package_name && ev.package_name.indexOf('Visualizou') === -1;
                     const badgeClass = isConversion ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' : 'bg-champagne/20 text-champagne border-champagne/30';
+                    const rotulo = rotularEvento(ev.package_name);
 
                     container.innerHTML += `
                         <div class="p-3 bg-inner-dynamic border border-zinc-200 dark:border-darkBorder rounded-xl flex items-start gap-3">
                             <div class="font-mono text-xs text-muted-dynamic pt-0.5">${hora}</div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-center mb-1">
-                                    <strong class="text-title-dynamic font-bold">${ev.package_name || 'Evento do Usuário'}</strong>
+                                    <strong class="text-title-dynamic font-bold">${rotulo}</strong>
                                     <span class="text-[10px] px-2 py-0.5 rounded border font-mono font-bold ${badgeClass}">Passo ${idx + 1}</span>
                                 </div>
                                 ${ev.estimated_value ? `<p class="text-emerald-500 font-bold font-mono text-xs">Valor estimado: R$ ${Number(ev.estimated_value).toLocaleString('pt-BR')},00</p>` : ''}
