@@ -29,7 +29,9 @@ export async function onRequest(context) {
 
     // 2. Extrai parâmetros da requisição
     const url = new URL(request.url);
-    const siteUrl = url.searchParams.get("siteUrl") || "sc-domain:festanocondominio.com.br";
+    // IMPORTANTE: propriedade no Search Console é do tipo "prefixo de URL" (cadeado),
+    // então o siteUrl precisa ser a URL completa, não "sc-domain:..."
+    const siteUrl = url.searchParams.get("siteUrl") || "https://festanocondominio.com.br/";
     const startDate = url.searchParams.get("startDate") || "2026-01-01";
     const endDate = url.searchParams.get("endDate") || new Date().toISOString().split("T")[0];
 
