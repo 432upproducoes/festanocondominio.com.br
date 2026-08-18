@@ -30,15 +30,21 @@ export async function onRequest(context) {
     // 2. Extrai parâmetros da requisição
     const url = new URL(request.url);
     // IMPORTANTE: propriedade no Search Console é do tipo "prefixo de URL" (cadeado),
-    // então o siteUrl precisa ser a URL completa, não "sc-domain:..."
+    // então o siteUrl precisa ser a URL completa, não "sc-domain:...".
+    // Travado em festanocondominio.com.br conforme confirmado — pode ser
+    // sobrescrito via querystring ?siteUrl= se precisar consultar outro site depois.
     const siteUrl = url.searchParams.get("siteUrl") || "https://festanocondominio.com.br/";
-    const startDate = url.searchParams.get("startDate") || "2026-01-01";
+    const startDate = url.searchParams.get("startDate") || defaultStartDate();
     const endDate = url.searchParams.get("endDate") || new Date().toISOString().split("T")[0];
 
     // 3. Obter Access Token usando as credenciais da Service Account
     const accessToken = await getGoogleAccessToken(credentials);
 
     // 4. Faz a requisição para a API do Search Console
+    // CORREÇÃO: dimensions apenas "query" — antes vinha ["date","query","page"],
+    // o que fazia o Google devolver uma linha por combinação de data+termo+página,
+    // fazendo o mesmo termo aparecer repetido dezenas de vezes e a tabela do
+    // dashboard ler a coluna errada como se fosse o termo pesquisado.
     const gscResponse = await fetch(
       `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
       {
@@ -50,13 +56,25 @@ export async function onRequest(context) {
         body: JSON.stringify({
           startDate: startDate,
           endDate: endDate,
-          dimensions: ["date", "query", "page"],
+          dimensions: ["query"],
           rowLimit: 100,
         }),
       }
     );
 
     const data = await gscResponse.json();
+
+    if (!gscResponse.ok) {
+      // Repassa o erro real do Google (ex: propriedade não verificada, sem permissão, etc)
+      return new Response(JSON.stringify({
+        error: "Google Search Console retornou erro",
+        status: gscResponse.status,
+        details: data
+      }), {
+        status: gscResponse.status,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
 
     return new Response(JSON.stringify(data), {
       status: gscResponse.status,
@@ -71,6 +89,12 @@ export async function onRequest(context) {
       { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
     );
   }
+}
+
+function defaultStartDate() {
+  const d = new Date();
+  d.setDate(d.getDate() - 30);
+  return d.toISOString().split("T")[0];
 }
 
 // Gerar JWT e obter token de acesso do Google
