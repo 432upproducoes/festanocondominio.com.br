@@ -1,6 +1,6 @@
 <!-- 
 ====================================================================
-VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
+VERSÃO ATUAL: v2.0.0 | Unificação 1.6.4 + 1.7.4 — Zero Fallback, Live Feed Completo, ROAS Real
 ====================================================================
 -->
 <!DOCTYPE html>
@@ -45,7 +45,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             background-color: #FAF9F6; 
             color: #1C1814; 
             font-family: system-ui, -apple-system, sans-serif; 
-        }
+        } 
         
         html.dark body { 
             background-color: #0F0D0B; 
@@ -92,6 +92,14 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #71717A;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body class="min-h-screen p-4 sm:p-6 antialiased custom-scrollbar">
@@ -100,7 +108,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 mb-8 border-b border-zinc-200 dark:border-darkBorder gap-4">
         <div>
             <div class="flex items-center gap-3">
-                <span class="text-xs uppercase font-extrabold tracking-widest text-champagne bg-champagne/15 px-3 py-1 rounded-full border border-champagne/40">Intelligence Hub v1.7.3</span>
+                <span class="text-xs uppercase font-extrabold tracking-widest text-champagne bg-champagne/15 px-3 py-1 rounded-full border border-champagne/40">Intelligence Hub v2.0.0</span>
                 <span id="last-update" class="text-xs text-muted-dynamic font-semibold">• Carregando dados...</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2 text-title-dynamic">Painel de Performance &amp; Live Tracking</h1>
@@ -132,13 +140,19 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             </div>
 
             <!-- Botão Registrar Fechamento -->
-            <button onclick="abrirModalFechamento()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition shadow-lg">
+            <button onclick="abrirModalFechamento()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition shadow-lg cursor-pointer">
                 <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 <span>+ Fechamento</span>
             </button>
 
+            <!-- Botão Registrar Gasto Ads -->
+            <button onclick="abrirModalAdSpend()" class="bg-zinc-700 hover:bg-zinc-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition shadow-lg cursor-pointer">
+                <i data-lucide="target" class="w-4 h-4"></i>
+                <span>+ Gasto Ads</span>
+            </button>
+
             <!-- Atualizar -->
-            <button onclick="carregarDashboard()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne">
+            <button onclick="carregarDashboard()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition glow-champagne cursor-pointer">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                 <span>Atualizar</span>
             </button>
@@ -151,7 +165,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             <i data-lucide="layers" class="w-4 h-4 text-champagne"></i>
             Métricas de Visão Geral
         </span>
-        <button onclick="alternarModoCards()" id="btn-toggle-cards" class="card-custom text-xs font-extrabold text-champagne px-3 py-1.5 rounded-xl flex items-center gap-2 hover:border-champagne transition shadow-sm">
+        <button onclick="alternarModoCards()" id="btn-toggle-cards" class="card-custom text-xs font-extrabold text-champagne px-3 py-1.5 rounded-xl flex items-center gap-2 hover:border-champagne transition shadow-sm cursor-pointer">
             <i data-lucide="repeat" class="w-3.5 h-3.5"></i>
             <span id="label-toggle-cards">Alternar para: Visão Financeira</span>
         </button>
@@ -166,7 +180,6 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         <div class="lg:col-span-2 space-y-8">
             <div class="card-custom p-6 rounded-2xl">
-                <!-- Cabeçalho e Abas Reformulados -->
                 <div class="mb-6 pb-4 border-b border-zinc-200 dark:border-darkBorder space-y-4">
                     <div>
                         <h3 class="text-lg font-extrabold text-title-dynamic">Inteligência de Tráfego &amp; Comportamento</h3>
@@ -174,23 +187,23 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                     </div>
 
                     <div class="flex flex-wrap items-center bg-zinc-200 dark:bg-darkBorder p-1 rounded-xl text-xs font-bold gap-1 w-full">
-                        <button onclick="alternarTab('heatmap')" id="tab-heatmap" class="tab-btn active px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                        <button onclick="alternarTab('heatmap')" id="tab-heatmap" class="tab-btn active px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center cursor-pointer">
                             <i data-lucide="flame" class="w-3.5 h-3.5"></i>
                             <span>Mapa de Calor</span>
                         </button>
-                        <button onclick="alternarTab('timeline')" id="tab-timeline" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                        <button onclick="alternarTab('timeline')" id="tab-timeline" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center cursor-pointer">
                             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                             <span>Evolução</span>
                         </button>
-                        <button onclick="alternarTab('funnel')" id="tab-funnel" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                        <button onclick="alternarTab('funnel')" id="tab-funnel" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center cursor-pointer">
                             <i data-lucide="filter" class="w-3.5 h-3.5"></i>
                             <span>Funil</span>
                         </button>
-                        <button onclick="alternarTab('pages')" id="tab-pages" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                        <button onclick="alternarTab('pages')" id="tab-pages" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center cursor-pointer">
                             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                             <span>Páginas &amp; Seções</span>
                         </button>
-                        <button onclick="alternarTab('gsc')" id="tab-gsc" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center">
+                        <button onclick="alternarTab('gsc')" id="tab-gsc" class="tab-btn text-muted-dynamic px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 flex-1 sm:flex-none justify-center cursor-pointer">
                             <i data-lucide="search" class="w-3.5 h-3.5"></i>
                             <span>Search Console</span>
                         </button>
@@ -215,7 +228,8 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
 
                 <!-- Tab 2: Evolução Diária -->
                 <div id="view-timeline" class="hidden">
-                    <div class="h-64">
+                    <div id="timeline-empty" class="hidden empty-state">Sem dados suficientes no período para montar a evolução.</div>
+                    <div id="timeline-chart-wrap" class="h-64">
                         <canvas id="timelineChart"></canvas>
                     </div>
                 </div>
@@ -233,9 +247,8 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <thead>
                                 <tr class="text-muted-dynamic border-b border-zinc-200 dark:border-darkBorder font-extrabold uppercase">
                                     <th class="py-2.5">Página / Seção</th>
-                                    <th class="text-center">Visualizações</th>
-                                    <th class="text-center">Visitantes</th>
-                                    <th class="text-right">Tempo Visível Médio</th>
+                                    <th class="text-center">Eventos</th>
+                                    <th class="text-center">Sessões Únicas</th>
                                 </tr>
                             </thead>
                             <tbody id="pages-table-body" class="divide-y divide-zinc-200 dark:divide-darkBorder font-mono"></tbody>
@@ -299,7 +312,8 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                         <i data-lucide="pie-chart" class="w-4 h-4 text-champagne"></i>
                         Distribuição das Origens (Auréola)
                     </h3>
-                    <div class="h-44 flex items-center justify-center">
+                    <div id="sources-empty" class="hidden empty-state">Nenhuma sessão registrada no período.</div>
+                    <div id="sources-chart-wrap" class="h-44 flex items-center justify-center">
                         <canvas id="sourcesChart"></canvas>
                     </div>
                 </div>
@@ -315,13 +329,13 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                         </span>
-                        <h3 class="text-sm font-extrabold text-title-dynamic uppercase tracking-wider">Live Feed (Ao Vivo)</h3>
+                        <h3 class="text-sm font-extrabold text-title-dynamic uppercase tracking-wider">Live Feed</h3>
                     </div>
-                    <span class="text-[10px] text-amber-900 dark:text-champagne bg-amber-100 dark:bg-darkBorder px-2.5 py-1 rounded-full font-mono font-bold border border-champagne/40">Tracking Inteligente</span>
+                    <span id="live-feed-count" class="text-[10px] text-amber-900 dark:text-champagne bg-amber-100 dark:bg-darkBorder px-2.5 py-1 rounded-full font-mono font-bold border border-champagne/40">0 sessões</span>
                 </div>
 
-                <div id="live-feed-container" class="space-y-4 max-h-[520px] overflow-y-auto pr-1 custom-scrollbar">
-                    <p class="text-xs text-muted-dynamic">Buscando últimas sessões...</p>
+                <div id="live-feed-container" class="space-y-4 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
+                    <p class="text-xs text-muted-dynamic">Buscando sessões do período...</p>
                 </div>
             </div>
 
@@ -329,9 +343,145 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                 <div class="p-3.5 bg-amber-50 dark:bg-champagne/15 border border-champagne/40 rounded-xl flex items-start gap-2.5">
                     <i data-lucide="mouse-pointer-click" class="w-4 h-4 text-champagne shrink-0 mt-0.5"></i>
                     <p class="text-[11px] text-amber-950 dark:text-amber-200/90 leading-snug font-semibold">
-                        <strong class="text-amber-800 dark:text-champagne">Dica Pro:</strong> Clique em qualquer sessão para abrir a jornada de passos navegados!
+                        <strong class="text-amber-800 dark:text-champagne">Dica Pro:</strong> Clique em qualquer sessão para abrir a jornada de passos navegados! O feed exibe todas as sessões do período selecionado.
                     </p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRAR FECHAMENTO -->
+    <div id="modal-fechamento" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-md w-full p-6 rounded-2xl relative shadow-2xl">
+            <div class="flex justify-between items-center pb-4 mb-4 border-b border-zinc-200 dark:border-darkBorder">
+                <h3 class="text-lg font-extrabold text-title-dynamic flex items-center gap-2">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500"></i>
+                    Registrar Novo Fechamento
+                </h3>
+                <button onclick="fecharModalFechamento()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="form-fechamento" onsubmit="salvarFechamento(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Nome do Cliente / Condomínio</label>
+                    <input type="text" id="deal-client" placeholder="Ex: Condomínio Bosque das Flores" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Data do Fechamento *</label>
+                    <input type="date" id="deal-date" required class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Valor do Contrato (R$) *</label>
+                    <input type="number" step="0.01" id="deal-value" required placeholder="Ex: 3500.00" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Pacote Contratado</label>
+                    <select id="deal-package" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                        <option value="Festa no Condomínio">Festa no Condomínio</option>
+                        <option value="Festa no Apê">Festa no Apê</option>
+                        <option value="Pocket Show Executivo">Pocket Show Executivo</option>
+                        <option value="Estate Session">Estate Session</option>
+                        <option value="Pocket Session">Pocket Session</option>
+                        <option value="Sonorização & Iluminação">Sonorização &amp; Iluminação</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+
+                <div id="fechamento-error" class="hidden text-xs font-bold text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-xl p-3"></div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="fecharModalFechamento()" class="px-4 py-2 rounded-xl text-xs font-bold text-muted-dynamic hover:bg-zinc-200 dark:hover:bg-darkBorder transition">Cancelar</button>
+                    <button type="submit" id="btn-save-deal" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-5 py-2 rounded-xl flex items-center gap-2 transition shadow-lg cursor-pointer">
+                        <span>Confirmar &amp; Salvar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRAR GASTO ADS -->
+    <div id="modal-adspend" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-md w-full p-6 rounded-2xl relative shadow-2xl">
+            <div class="flex justify-between items-center pb-4 mb-4 border-b border-zinc-200 dark:border-darkBorder">
+                <h3 class="text-lg font-extrabold text-title-dynamic flex items-center gap-2">
+                    <i data-lucide="target" class="w-5 h-5 text-champagne"></i>
+                    Registrar Investimento em Ads
+                </h3>
+                <button onclick="fecharModalAdSpend()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="form-adspend" onsubmit="salvarAdSpend(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Data do Gasto *</label>
+                    <input type="date" id="adspend-date" required class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Valor Investido (R$) *</label>
+                    <input type="number" step="0.01" id="adspend-value" required placeholder="Ex: 1500.00" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-title-dynamic mb-1">Observações</label>
+                    <input type="text" id="adspend-notes" placeholder="Ex: Campanha Google Ads Julho" class="w-full bg-inner-dynamic text-title-dynamic text-xs font-semibold px-3 py-2.5 rounded-xl border border-zinc-300 dark:border-darkBorder focus:outline-none focus:border-champagne">
+                </div>
+
+                <div id="adspend-error" class="hidden text-xs font-bold text-rose-500 bg-rose-500/10 border border-rose-500/30 rounded-xl p-3"></div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="fecharModalAdSpend()" class="px-4 py-2 rounded-xl text-xs font-bold text-muted-dynamic hover:bg-zinc-200 dark:hover:bg-darkBorder transition">Cancelar</button>
+                    <button type="submit" id="btn-save-adspend" class="bg-zinc-700 hover:bg-zinc-600 text-white font-extrabold text-xs px-5 py-2 rounded-xl flex items-center gap-2 transition shadow-lg cursor-pointer">
+                        <span>Confirmar &amp; Salvar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: INSPECTOR DE JORNADA DE SESSÃO -->
+    <div id="modal-inspector" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4 fade-card">
+        <div class="card-custom max-w-lg w-full p-6 rounded-2xl relative shadow-2xl max-h-[85vh] flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center pb-4 mb-4 border-b border-zinc-200 dark:border-darkBorder">
+                    <div>
+                        <h3 class="text-base font-extrabold text-title-dynamic flex items-center gap-2">
+                            <i data-lucide="footprints" class="w-5 h-5 text-champagne"></i>
+                            Jornada Transparente do Usuário
+                        </h3>
+                        <p id="inspector-session-id" class="text-[10px] text-muted-dynamic font-mono mt-0.5">Sessão: -</p>
+                    </div>
+                    <button onclick="fecharModalInspector()" class="text-muted-dynamic hover:text-title-dynamic transition p-1 cursor-pointer">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <div id="inspector-meta" class="grid grid-cols-2 gap-3 mb-4 text-xs font-mono">
+                    <div class="p-2.5 bg-inner-dynamic rounded-lg">
+                        <span class="text-muted-dynamic block text-[10px]">Tempo de Permanência:</span>
+                        <strong id="inspector-duration" class="text-amber-700 dark:text-champagne">-</strong>
+                    </div>
+                    <div class="p-2.5 bg-inner-dynamic rounded-lg">
+                        <span class="text-muted-dynamic block text-[10px]">Origem / Campanha:</span>
+                        <strong id="inspector-source" class="text-title-dynamic truncate block">-</strong>
+                    </div>
+                </div>
+
+                <div id="inspector-events-container" class="space-y-3 overflow-y-auto max-h-[40vh] pr-1 custom-scrollbar text-xs">
+                    <!-- Passos da jornada -->
+                </div>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-zinc-200 dark:border-darkBorder flex justify-end">
+                <button onclick="fecharModalInspector()" class="bg-champagne hover:bg-champagneHover text-darkEspresso font-extrabold text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+                    Fechar Inspeção
+                </button>
             </div>
         </div>
     </div>
@@ -340,8 +490,6 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
     <script>
         const SUPABASE_URL = "https://paetkspbfejtjjkngqej.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhZXRrc3BiZmVqdGpqa25ncWVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDU2OTgsImV4cCI6MjA4NjQ4MTY5OH0.IiYweZ2g3bP7b0o7VvBW5LLb6d1oHtSNFUZlVkIsdsA";
-        
-        // Rota relativa nativa do Cloudflare Pages Functions
         const GSC_WORKER_URL = "/api/gsc";
 
         let timelineChartInstance = null;
@@ -349,6 +497,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
         let globalSessionsData = [];
         let globalConversionsData = [];
         let globalDealsData = [];
+        let globalAdSpendData = [];
         let modoCardsAtual = 'trafego';
 
         function escutarTemaDoSistema() {
@@ -377,6 +526,9 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
         document.addEventListener("DOMContentLoaded", () => {
             escutarTemaDoSistema();
             lucide.createIcons();
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('deal-date').value = hoje;
+            document.getElementById('adspend-date').value = hoje;
             carregarDashboard();
 
             document.getElementById('period-filter').addEventListener('change', carregarDashboard);
@@ -394,7 +546,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             void container.offsetWidth;
             container.classList.add('fade-card');
 
-            renderizarTopCards(globalSessionsData, globalConversionsData, globalDealsData);
+            renderizarTopCards(globalSessionsData, globalConversionsData, globalDealsData, globalAdSpendData);
         }
 
         function alternarTab(tab) {
@@ -419,7 +571,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             } else if (tab === 'pages') {
                 document.getElementById('tab-pages').classList.add('active');
                 document.getElementById('view-pages').classList.remove('hidden');
-                renderizarPaginasESecoes(globalConversionsData, globalSessionsData);
+                renderizarPaginasESecoes(globalConversionsData);
             } else if (tab === 'gsc') {
                 document.getElementById('tab-gsc').classList.add('active');
                 document.getElementById('view-gsc').classList.remove('hidden');
@@ -428,12 +580,8 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             lucide.createIcons();
         }
 
-        async function carregarDashboard() {
-            const periodo = document.getElementById('period-filter').value;
-            const ocultarBots = document.getElementById('filter-bots').checked;
-            let isoDate;
-            let labelPeriodo;
-
+        function calcularIntervaloData(periodo) {
+            let isoDate, labelPeriodo;
             if (periodo === 'hoje') {
                 const inicioHoje = new Date();
                 inicioHoje.setHours(0, 0, 0, 0);
@@ -446,6 +594,14 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                 isoDate = dataLimite.toISOString();
                 labelPeriodo = `${dias}d`;
             }
+            return { isoDate, labelPeriodo };
+        }
+
+        async function carregarDashboard() {
+            const periodo = document.getElementById('period-filter').value;
+            const ocultarBots = document.getElementById('filter-bots').checked;
+            const { isoDate, labelPeriodo } = calcularIntervaloData(periodo);
+            const dataSomente = isoDate.split('T')[0];
 
             document.getElementById('last-update').innerText = `• Atualizado agora (${labelPeriodo})`;
 
@@ -453,48 +609,52 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                 const resSessions = await fetch(`${SUPABASE_URL}/rest/v1/con_sessions?created_at=gte.${isoDate}&order=created_at.desc`, {
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
+                if (!resSessions.ok) throw new Error('Falha ao buscar sessões (con_sessions)');
                 let sessions = await resSessions.json();
 
                 const resConversions = await fetch(`${SUPABASE_URL}/rest/v1/con_conversion_events?created_at=gte.${isoDate}&order=created_at.desc`, {
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
                 });
+                if (!resConversions.ok) throw new Error('Falha ao buscar conversões (con_conversion_events)');
                 let conversions = await resConversions.json();
 
-                let deals = [];
-                try {
-                    const resDeals = await fetch(`${SUPABASE_URL}/rest/v1/con_deals?created_at=gte.${isoDate}&order=created_at.desc`, {
-                        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                    });
-                    if (resDeals.ok) deals = await resDeals.json();
-                } catch(e) {}
+                const resDeals = await fetch(`${SUPABASE_URL}/rest/v1/con_deals?created_at=gte.${isoDate}&order=created_at.desc`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                if (!resDeals.ok) throw new Error('Falha ao buscar fechamentos (con_deals)');
+                let deals = await resDeals.json();
+
+                const resAdSpend = await fetch(`${SUPABASE_URL}/rest/v1/con_ad_spend?spend_date=gte.${dataSomente}&order=spend_date.desc`, {
+                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                });
+                if (!resAdSpend.ok) throw new Error('Falha ao buscar gastos de ads (con_ad_spend)');
+                let adSpend = await resAdSpend.json();
 
                 if (ocultarBots) {
-                    const botCities = ['ashburn', 'datacenter', 'seattle', 'dublin', 'mountain view'];
-                    sessions = sessions.filter(s => !botCities.some(b => (s.city || '').toLowerCase().includes(b)));
+                    sessions = sessions.filter(s => s.is_bot !== true);
                 }
 
                 globalSessionsData = sessions;
                 globalConversionsData = conversions;
                 globalDealsData = deals;
+                globalAdSpendData = adSpend;
 
-                renderizarTopCards(sessions, conversions, deals);
+                renderizarTopCards(sessions, conversions, deals, adSpend);
                 renderizarCidades(sessions);
                 renderizarLiveFeed(sessions, conversions);
                 renderizarHeatmap(sessions);
                 renderizarGraficoOrigens(sessions);
 
-                if (document.getElementById('tab-timeline').classList.contains('active')) {
-                    renderizarGraficoTimeline(sessions, conversions);
-                } else if (document.getElementById('tab-funnel').classList.contains('active')) {
-                    renderizarFunilEtapas(sessions, conversions, deals);
-                } else if (document.getElementById('tab-pages').classList.contains('active')) {
-                    renderizarPaginasESecoes(conversions, sessions);
-                } else if (document.getElementById('tab-gsc').classList.contains('active')) {
-                    renderizarSearchConsole();
-                }
+                const abaAtiva = document.querySelector('.tab-btn.active').id;
+                if (abaAtiva === 'tab-timeline') renderizarGraficoTimeline(sessions, conversions);
+                else if (abaAtiva === 'tab-funnel') renderizarFunilEtapas(sessions, conversions, deals);
+                else if (abaAtiva === 'tab-pages') renderizarPaginasESecoes(conversions);
+                else if (abaAtiva === 'tab-gsc') renderizarSearchConsole();
 
             } catch (err) {
                 console.error("Erro ao carregar dados:", err);
+                document.getElementById('last-update').innerText = `• Erro ao carregar dados: ${err.message}`;
+                document.getElementById('live-feed-container').innerHTML = `<p class="text-xs text-rose-500 font-bold">Não foi possível carregar as sessões. ${err.message}</p>`;
             }
         }
 
@@ -504,34 +664,25 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
 
             try {
                 const response = await fetch(GSC_WORKER_URL);
-                if (!response.ok) throw new Error('Worker offline');
+                if (!response.ok) throw new Error(`Serviço GSC respondeu com status ${response.status}`);
                 const data = await response.json();
 
                 if (data.rows && data.rows.length > 0) {
                     tableBody.innerHTML = '';
-                    
-                    let totalClicks = 0;
-                    let totalImpressions = 0;
-                    let totalPos = 0;
+                    let totalClicks = 0, totalImpressions = 0, totalPos = 0;
 
                     data.rows.forEach(row => {
                         totalClicks += row.clicks;
                         totalImpressions += row.impressions;
                         totalPos += row.position;
 
-                        const query = row.keys[0];
-                        const clicks = row.clicks;
-                        const impressions = row.impressions;
-                        const ctr = (row.ctr * 100).toFixed(1) + '%';
-                        const pos = row.position.toFixed(1);
-
                         tableBody.innerHTML += `
                             <tr class="hover:bg-zinc-100 dark:hover:bg-darkCard transition">
-                                <td class="py-2.5 font-bold text-title-dynamic">${query}</td>
-                                <td class="text-center font-bold text-emerald-500">${clicks}</td>
-                                <td class="text-center text-muted-dynamic">${impressions}</td>
-                                <td class="text-center text-champagne">${ctr}</td>
-                                <td class="text-right font-bold text-title-dynamic">${pos}</td>
+                                <td class="py-2.5 font-bold text-title-dynamic">${row.keys[0]}</td>
+                                <td class="text-center font-bold text-emerald-500">${row.clicks}</td>
+                                <td class="text-center text-muted-dynamic">${row.impressions}</td>
+                                <td class="text-center text-champagne">${(row.ctr * 100).toFixed(1)}%</td>
+                                <td class="text-right font-bold text-title-dynamic">${row.position.toFixed(1)}</td>
                             </tr>
                         `;
                     });
@@ -541,14 +692,14 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                     document.getElementById('gsc-clicks').innerText = totalClicks;
                     document.getElementById('gsc-impressions').innerText = totalImpressions;
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted-dynamic font-semibold">Nenhum termo de busca registrado.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted-dynamic font-semibold">Nenhum termo de busca retornado pelo Search Console no período.</td></tr>';
                     document.getElementById('gsc-top-query').innerText = '-';
                     document.getElementById('gsc-avg-position').innerText = '-';
                     document.getElementById('gsc-clicks').innerText = '0';
                     document.getElementById('gsc-impressions').innerText = '0';
                 }
             } catch (err) {
-                tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-rose-500 font-semibold">Não foi possível conectar ao Google Search Console (Serviço Offline / Sem API).</td></tr>';
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-rose-500 font-semibold">Não foi possível conectar ao Google Search Console: ${err.message}</td></tr>`;
                 document.getElementById('gsc-top-query').innerText = '-';
                 document.getElementById('gsc-avg-position').innerText = '-';
                 document.getElementById('gsc-clicks').innerText = '0';
@@ -556,27 +707,32 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             }
         }
 
-        function renderizarTopCards(sessions, conversions, deals) {
+        function renderizarTopCards(sessions, conversions, deals, adSpend) {
             const container = document.getElementById('cards-container');
             const totalVisitas = sessions.length;
             const totalConversoes = conversions.filter(c => c.package_name && c.package_name.indexOf('Visualizou') === -1).length;
             const totalDeals = deals.length;
 
             const taxaConversao = totalVisitas > 0 ? ((totalConversoes / totalVisitas) * 100).toFixed(1) : '0.0';
-            const abandonos = Math.max(0, 100 - parseFloat(taxaConversao)).toFixed(1);
+            const abandonos = totalVisitas > 0 ? Math.max(0, 100 - parseFloat(taxaConversao)).toFixed(1) : '0.0';
 
             const orcamEstimado = conversions.reduce((sum, c) => sum + Number(c.estimated_value || 0), 0);
             const faturamentoReal = deals.reduce((sum, d) => sum + Number(d.deal_value || 0), 0);
-            const gastoAds = 1500;
-            const roasReal = faturamentoReal > 0 ? (faturamentoReal / gastoAds).toFixed(1) + 'x' : '0.0x';
-            const ticketMedio = totalDeals > 0 ? (faturamentoReal / totalDeals) : (totalConversoes > 0 ? (orcamEstimado / totalConversoes) : 0);
+            const gastoAdsReal = adSpend.reduce((sum, a) => sum + Number(a.amount || 0), 0);
+            const temGastoLancado = adSpend.length > 0;
+
+            const roasReal = temGastoLancado && gastoAdsReal > 0
+                ? (faturamentoReal / gastoAdsReal).toFixed(1) + 'x'
+                : null;
+
+            const ticketMedio = totalDeals > 0 ? (faturamentoReal / totalDeals) : null;
 
             const sessoesValidas = sessions.filter(s => Number(s.duration_seconds) > 0);
             const totalSegundos = sessoesValidas.reduce((sum, s) => sum + Number(s.duration_seconds), 0);
             const mediaSegundos = sessoesValidas.length > 0 ? Math.round(totalSegundos / sessoesValidas.length) : 0;
             const minutos = Math.floor(mediaSegundos / 60);
             const segundos = mediaSegundos % 60;
-            const tempoFormatado = mediaSegundos > 0 ? `${minutos}m ${segundos < 10 ? '0' : ''}${segundos}s` : '0m 00s';
+            const tempoFormatado = sessoesValidas.length > 0 ? `${minutos}m ${segundos < 10 ? '0' : ''}${segundos}s` : 'Sem dado de duração';
 
             const sourceCounts = {};
             sessions.forEach(s => {
@@ -585,9 +741,9 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             });
 
             const sortedSources = Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]);
-            const topSource = sortedSources.length > 0 ? sortedSources[0][0] : 'Nenhum';
+            const topSource = sortedSources.length > 0 ? sortedSources[0][0] : 'Sem sessões no período';
 
-            let top3HTML = '';
+            let top3HTML = sortedSources.length > 0 ? '' : '<p class="text-[10px] text-muted-dynamic">Nenhuma origem registrada.</p>';
             sortedSources.slice(0, 3).forEach(([sourceName, count]) => {
                 const pct = Math.round((count / (totalVisitas || 1)) * 100);
                 top3HTML += `<div class="flex justify-between items-center text-[10px] text-muted-dynamic">
@@ -652,7 +808,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Permanência Média</span>
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="clock" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">${tempoFormatado}</p>
+                        <p class="text-xl font-extrabold text-title-dynamic mt-3">${tempoFormatado}</p>
                         <div class="flex items-center gap-1.5 text-champagne text-xs mt-3 font-bold">
                             <span>Tempo de engajamento real</span>
                         </div>
@@ -665,7 +821,12 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Investimento Ads</span>
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="target" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${gastoAds.toLocaleString('pt-BR')}<span class="text-xs font-normal text-muted-dynamic">,00</span></p>
+                        ${temGastoLancado
+                            ? `<p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${gastoAdsReal.toLocaleString('pt-BR')}<span class="text-xs font-normal text-muted-dynamic">,00</span></p>
+                               <div class="flex items-center gap-1.5 text-muted-dynamic text-xs mt-3 font-bold"><span>${adSpend.length} lançamento(s)</span></div>`
+                            : `<p class="text-sm font-extrabold text-amber-600 dark:text-amber-400 mt-3">Nenhum gasto lançado</p>
+                               <div class="flex items-center gap-1.5 text-muted-dynamic text-xs mt-3 font-bold"><span>Use "+ Gasto Ads"</span></div>`
+                        }
                     </div>
 
                     <div class="card-custom p-5 rounded-2xl relative">
@@ -674,6 +835,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="file-text" class="w-5 h-5"></i></span>
                         </div>
                         <p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${orcamEstimado.toLocaleString('pt-BR')}<span class="text-xs font-normal text-muted-dynamic">,00</span></p>
+                        <div class="flex items-center gap-1.5 text-emerald-500 text-xs mt-3 font-bold"><span>${totalConversoes} intenções Whats</span></div>
                     </div>
 
                     <div class="card-custom p-5 rounded-2xl relative border-l-4 border-l-emerald-500">
@@ -682,6 +844,7 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="p-2 bg-emerald-500/15 rounded-lg text-emerald-500 border border-emerald-500/30"><i data-lucide="check-circle" class="w-5 h-5"></i></span>
                         </div>
                         <p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${faturamentoReal.toLocaleString('pt-BR')}<span class="text-xs font-normal text-muted-dynamic">,00</span></p>
+                        <div class="flex items-center gap-1.5 text-emerald-500 text-xs mt-3 font-bold"><span>${totalDeals} liquidados</span></div>
                     </div>
 
                     <div class="card-custom p-5 rounded-2xl relative">
@@ -689,7 +852,12 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">ROAS Real</span>
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="zap" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-2xl font-extrabold text-champagne mt-3">${roasReal}</p>
+                        ${roasReal
+                            ? `<p class="text-2xl font-extrabold text-champagne mt-3">${roasReal}</p>
+                               <div class="flex items-center gap-1 text-muted-dynamic text-xs mt-3 font-semibold"><span>Retorno de Fechamentos</span></div>`
+                            : `<p class="text-sm font-extrabold text-amber-600 dark:text-amber-400 mt-3">Sem gasto lançado no período</p>
+                               <div class="flex items-center gap-1 text-muted-dynamic text-xs mt-3 font-semibold"><span>Lance o investimento p/ calcular</span></div>`
+                        }
                     </div>
 
                     <div class="card-custom p-5 rounded-2xl relative">
@@ -697,7 +865,10 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             <span class="text-xs font-bold text-muted-dynamic uppercase tracking-wider">Ticket Médio</span>
                             <span class="p-2 bg-champagne/15 rounded-lg text-champagne border border-champagne/30"><i data-lucide="award" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${ticketMedio.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                        ${ticketMedio !== null
+                            ? `<p class="text-2xl font-extrabold text-title-dynamic mt-3">R$ ${ticketMedio.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>`
+                            : `<p class="text-sm font-extrabold text-amber-600 dark:text-amber-400 mt-3">Nenhum contrato fechado</p>`
+                        }
                     </div>
                 `;
             }
@@ -750,7 +921,9 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
 
         function renderizarLiveFeed(sessions, conversions) {
             const container = document.getElementById('live-feed-container');
+            const countBadge = document.getElementById('live-feed-count');
             container.innerHTML = '';
+            countBadge.innerText = `${sessions.length} sessõe${sessions.length === 1 ? '' : 's'}`;
 
             const convertedSessionIds = new Set(
                 conversions
@@ -758,27 +931,25 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                     .map(c => c.session_id)
             );
 
-            const recentSessions = sessions.slice(0, 6);
-
-            if (recentSessions.length === 0) {
-                container.innerHTML = '<p class="text-xs text-muted-dynamic">Nenhuma sessão recente registrada.</p>';
+            if (sessions.length === 0) {
+                container.innerHTML = '<p class="text-xs text-muted-dynamic">Nenhuma sessão registrada no período selecionado.</p>';
                 return;
             }
 
-            recentSessions.forEach(s => {
+            sessions.forEach(s => {
                 const converted = convertedSessionIds.has(s.id);
                 const city = nomeCidadeReal(s);
-                const device = s.device || 'Mobile';
+                const device = s.device || 'Não identificado';
                 const hora = formatarHora(s.created_at);
 
                 const statusTag = converted 
                     ? '<span class="text-[10px] text-emerald-800 dark:text-emerald-300 font-extrabold bg-emerald-100 dark:bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/40">No WhatsApp</span>'
                     : '<span class="text-[10px] text-amber-900 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/40">Navegando</span>';
 
-                const borderColor = converted ? 'border-champagne' : 'border-zinc-200 dark:border-darkBorder';
+                const borderColor = converted ? 'border-champagne hover:border-emerald-500' : 'border-zinc-200 dark:border-darkBorder hover:border-champagne/60';
 
                 container.innerHTML += `
-                    <div class="p-3.5 bg-inner-dynamic border ${borderColor} rounded-xl group">
+                    <div onclick="abrirInspectorSessao('${s.id}')" class="p-3.5 bg-inner-dynamic border ${borderColor} rounded-xl group cursor-pointer transition shadow-sm hover:scale-[1.01]">
                         <div class="flex justify-between items-start mb-1.5">
                             <span class="text-xs font-bold ${converted ? 'text-amber-800 dark:text-champagne' : 'text-title-dynamic'} flex items-center gap-1.5">
                                 <i data-lucide="globe" class="w-3.5 h-3.5 text-champagne"></i>
@@ -790,8 +961,9 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                             </span>
                         </div>
                         <p class="text-[11px] text-muted-dynamic mb-2 font-semibold">📱 ${device}</p>
-                        <div class="bg-white dark:bg-darkCard p-2 rounded border border-zinc-200 dark:border-darkBorder text-[11px] font-mono text-title-dynamic">
+                        <div class="bg-white dark:bg-darkCard p-2 rounded border border-zinc-200 dark:border-darkBorder text-[11px] font-mono text-title-dynamic flex justify-between items-center">
                             <p class="text-amber-800 dark:text-amber-200 font-semibold truncate">Fonte: ${s.source || 'Acesso Direto'}</p>
+                            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-champagne"></i>
                         </div>
                     </div>
                 `;
@@ -837,6 +1009,38 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
         }
 
         function renderizarGraficoTimeline(sessions, conversions) {
+            const wrap = document.getElementById('timeline-chart-wrap');
+            const emptyState = document.getElementById('timeline-empty');
+
+            if (sessions.length === 0) {
+                wrap.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                if (timelineChartInstance) { timelineChartInstance.destroy(); timelineChartInstance = null; }
+                return;
+            }
+            wrap.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            // Agrupa por dia real (sem estimativa) a partir dos dados carregados
+            const porDiaSessoes = {};
+            const porDiaConversoes = {};
+            sessions.forEach(s => {
+                const dia = (s.created_at || '').split('T')[0];
+                porDiaSessoes[dia] = (porDiaSessoes[dia] || 0) + 1;
+            });
+            conversions.forEach(c => {
+                const dia = (c.created_at || '').split('T')[0];
+                porDiaConversoes[dia] = (porDiaConversoes[dia] || 0) + 1;
+            });
+
+            const dias = Object.keys(porDiaSessoes).sort();
+            const labels = dias.map(d => {
+                const [ano, mes, dia] = d.split('-');
+                return `${dia}/${mes}`;
+            });
+            const dataSessoes = dias.map(d => porDiaSessoes[d]);
+            const dataConversoes = dias.map(d => porDiaConversoes[d] || 0);
+
             const ctx = document.getElementById('timelineChart').getContext('2d');
             if (timelineChartInstance) timelineChartInstance.destroy();
 
@@ -847,20 +1051,20 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             timelineChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Período Atual'],
+                    labels: labels,
                     datasets: [{
-                        label: 'Visitantes Totais',
-                        data: [Math.round(sessions.length * 0.7), Math.round(sessions.length * 0.85), Math.round(sessions.length * 0.9), sessions.length],
+                        label: 'Visitantes por Dia',
+                        data: dataSessoes,
                         borderColor: isDark ? '#C5B8A5' : '#71717A',
                         backgroundColor: 'transparent',
-                        tension: 0.4
+                        tension: 0.3
                     }, {
-                        label: 'Orçamentos WhatsApp',
-                        data: [Math.round(conversions.length * 0.6), Math.round(conversions.length * 0.8), Math.round(conversions.length * 0.9), conversions.length],
+                        label: 'Orçamentos WhatsApp por Dia',
+                        data: dataConversoes,
                         borderColor: '#D4B068',
                         backgroundColor: 'rgba(212, 176, 104, 0.2)',
                         fill: true,
-                        tension: 0.4
+                        tension: 0.3
                     }]
                 },
                 options: {
@@ -917,71 +1121,73 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
             `;
         }
 
-        function renderizarPaginasESecoes(conversions, sessions) {
+        function renderizarPaginasESecoes(conversions) {
             const tableBody = document.getElementById('pages-table-body');
             tableBody.innerHTML = '';
             const pageStats = {};
 
             conversions.forEach(c => {
-                const name = c.package_name || 'Página Principal';
-                if (!pageStats[name]) {
-                    pageStats[name] = { views: 0, sessionSet: new Set() };
-                }
+                const name = c.package_name || 'Não identificado';
+                if (!pageStats[name]) pageStats[name] = { views: 0, sessionSet: new Set() };
                 pageStats[name].views++;
                 if (c.session_id) pageStats[name].sessionSet.add(c.session_id);
             });
 
             if (Object.keys(pageStats).length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted-dynamic font-semibold">Nenhuma interação com páginas registrada no período.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-muted-dynamic font-semibold">Nenhuma interação registrada no período.</td></tr>';
                 return;
             }
 
             const sorted = Object.entries(pageStats).sort((a, b) => b[1].views - a[1].views);
 
             sorted.forEach(([pageName, stat]) => {
-                const uniqueVisitors = stat.sessionSet.size || Math.max(1, Math.round(stat.views * 0.8));
-                const estimatedTime = Math.round(15 + (stat.views * 4)) + 's';
-
                 tableBody.innerHTML += `
                     <tr class="hover:bg-zinc-100 dark:hover:bg-darkCard transition">
                         <td class="py-2.5 font-bold text-title-dynamic">${pageName}</td>
                         <td class="text-center font-bold text-champagne">${stat.views}</td>
-                        <td class="text-center text-muted-dynamic">${uniqueVisitors}</td>
-                        <td class="text-right text-muted-dynamic">${estimatedTime}</td>
+                        <td class="text-center text-muted-dynamic">${stat.sessionSet.size}</td>
                     </tr>
                 `;
             });
         }
 
         function renderizarGraficoOrigens(sessions) {
+            const wrap = document.getElementById('sources-chart-wrap');
+            const emptyState = document.getElementById('sources-empty');
+
+            if (sessions.length === 0) {
+                wrap.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                if (sourcesChartInstance) { sourcesChartInstance.destroy(); sourcesChartInstance = null; }
+                return;
+            }
+            wrap.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
             const ctx = document.getElementById('sourcesChart').getContext('2d');
             if (sourcesChartInstance) sourcesChartInstance.destroy();
 
             const isDark = document.documentElement.classList.contains('dark');
             const textColor = isDark ? '#FAF9F6' : '#1C1814';
 
-            let googleCount = 0;
-            let instagramCount = 0;
-            let diretoCount = 0;
-            let outrosCount = 0;
-
+            const sourceCounts = {};
             sessions.forEach(s => {
-                const src = (s.source || '').toLowerCase();
-                if (src.includes('google')) googleCount++;
-                else if (src.includes('meta') || src.includes('instagram')) instagramCount++;
-                else if (src.includes('direto') || src === '') diretoCount++;
-                else outrosCount++;
+                const src = s.source || 'Acesso Direto';
+                sourceCounts[src] = (sourceCounts[src] || 0) + 1;
             });
 
-            const dataValues = [googleCount, instagramCount, diretoCount, outrosCount];
+            const sorted = Object.entries(sourceCounts).sort((a, b) => b[1] - a[1]);
+            const labels = sorted.map(([name]) => name);
+            const dataValues = sorted.map(([, count]) => count);
+            const palette = ['#D4B068', '#C29D55', '#382D24', '#71717A', '#8B7355', '#5C4A38'];
 
             sourcesChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Google Ads', 'Instagram / Meta', 'Direto', 'Outros'],
+                    labels: labels,
                     datasets: [{
                         data: dataValues,
-                        backgroundColor: ['#D4B068', '#C29D55', '#382D24', '#71717A'],
+                        backgroundColor: labels.map((_, i) => palette[i % palette.length]),
                         borderWidth: 0
                     }]
                 },
@@ -992,6 +1198,169 @@ VERSÃO ATUAL: v1.7.3 | Cloudflare Pages & Git Ready + Clean GSC
                     plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { size: 10, weight: 'bold' } } } }
                 }
             });
+        }
+
+        // --- MODAIS ---
+        function abrirModalFechamento() {
+            document.getElementById('fechamento-error').classList.add('hidden');
+            document.getElementById('modal-fechamento').classList.remove('hidden');
+        }
+        function fecharModalFechamento() {
+            document.getElementById('modal-fechamento').classList.add('hidden');
+        }
+
+        function abrirModalAdSpend() {
+            document.getElementById('adspend-error').classList.add('hidden');
+            document.getElementById('modal-adspend').classList.remove('hidden');
+        }
+        function fecharModalAdSpend() {
+            document.getElementById('modal-adspend').classList.add('hidden');
+        }
+
+        async function salvarFechamento(event) {
+            event.preventDefault();
+            const btnSave = document.getElementById('btn-save-deal');
+            const errorBox = document.getElementById('fechamento-error');
+            errorBox.classList.add('hidden');
+            btnSave.disabled = true;
+            btnSave.innerHTML = '<span>Salvando...</span>';
+
+            const client = document.getElementById('deal-client').value.trim();
+            const dataFechamento = document.getElementById('deal-date').value;
+            const value = parseFloat(document.getElementById('deal-value').value);
+            const packageName = document.getElementById('deal-package').value;
+
+            const payload = {
+                deal_value: value,
+                package_name: packageName,
+                created_at: new Date(dataFechamento + 'T12:00:00').toISOString()
+            };
+            if (client) payload.client_name = client;
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/con_deals`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    fecharModalFechamento();
+                    document.getElementById('form-fechamento').reset();
+                    document.getElementById('deal-date').value = new Date().toISOString().split('T')[0];
+                    carregarDashboard();
+                } else {
+                    const errText = await res.text();
+                    errorBox.innerText = `Erro ao salvar (${res.status}): ${errText}`;
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorBox.innerText = `Erro de conexão: ${err.message}`;
+                errorBox.classList.remove('hidden');
+            } finally {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<span>Confirmar &amp; Salvar</span>';
+            }
+        }
+
+        async function salvarAdSpend(event) {
+            event.preventDefault();
+            const btnSave = document.getElementById('btn-save-adspend');
+            const errorBox = document.getElementById('adspend-error');
+            errorBox.classList.add('hidden');
+            btnSave.disabled = true;
+            btnSave.innerHTML = '<span>Salvando...</span>';
+
+            const dataGasto = document.getElementById('adspend-date').value;
+            const valor = parseFloat(document.getElementById('adspend-value').value);
+            const notas = document.getElementById('adspend-notes').value.trim();
+
+            const payload = { spend_date: dataGasto, amount: valor };
+            if (notas) payload.notes = notas;
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/con_ad_spend`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    fecharModalAdSpend();
+                    document.getElementById('form-adspend').reset();
+                    document.getElementById('adspend-date').value = new Date().toISOString().split('T')[0];
+                    carregarDashboard();
+                } else {
+                    const errText = await res.text();
+                    errorBox.innerText = `Erro ao salvar (${res.status}): ${errText}`;
+                    errorBox.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorBox.innerText = `Erro de conexão: ${err.message}`;
+                errorBox.classList.remove('hidden');
+            } finally {
+                btnSave.disabled = false;
+                btnSave.innerHTML = '<span>Confirmar &amp; Salvar</span>';
+            }
+        }
+
+        function abrirInspectorSessao(sessionId) {
+            const modal = document.getElementById('modal-inspector');
+            const container = document.getElementById('inspector-events-container');
+            const session = globalSessionsData.find(s => s.id === sessionId);
+
+            document.getElementById('inspector-session-id').innerText = `ID da Sessão: ${sessionId}`;
+            document.getElementById('inspector-duration').innerText = session && session.duration_seconds ? `${session.duration_seconds} seg` : 'Sem dado';
+            document.getElementById('inspector-source').innerText = session
+                ? `${session.source || 'Acesso Direto'} ${session.campaign && session.campaign !== 'none' ? '/ ' + session.campaign : ''}`
+                : '-';
+
+            const sessionEvents = globalConversionsData.filter(c => c.session_id === sessionId);
+            container.innerHTML = '';
+
+            if (sessionEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="p-4 bg-inner-dynamic rounded-xl text-center">
+                        <p class="text-muted-dynamic font-semibold">O usuário apenas visualizou a página e não disparou eventos adicionais.</p>
+                    </div>
+                `;
+            } else {
+                sessionEvents.forEach((ev, idx) => {
+                    const hora = formatarHora(ev.created_at);
+                    const isConversion = ev.package_name && ev.package_name.indexOf('Visualizou') === -1;
+                    const badgeClass = isConversion ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30' : 'bg-champagne/20 text-champagne border-champagne/30';
+
+                    container.innerHTML += `
+                        <div class="p-3 bg-inner-dynamic border border-zinc-200 dark:border-darkBorder rounded-xl flex items-start gap-3">
+                            <div class="font-mono text-xs text-muted-dynamic pt-0.5">${hora}</div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center mb-1">
+                                    <strong class="text-title-dynamic font-bold">${ev.package_name || 'Evento do Usuário'}</strong>
+                                    <span class="text-[10px] px-2 py-0.5 rounded border font-mono font-bold ${badgeClass}">Passo ${idx + 1}</span>
+                                </div>
+                                ${ev.estimated_value ? `<p class="text-emerald-500 font-bold font-mono text-xs">Valor estimado: R$ ${Number(ev.estimated_value).toLocaleString('pt-BR')},00</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function fecharModalInspector() {
+            document.getElementById('modal-inspector').classList.add('hidden');
         }
     </script>
 </body>
